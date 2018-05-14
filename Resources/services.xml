@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+
+        <service class="mojDashButton\Services\DashButton\DbCollector"
+                 id="moj_dash_button.services.dash_button.db_collector">
+            <argument id="models" type="service"/>
+        </service>
+        <service class="mojDashButton\Services\Core\Logger" id="moj_dash_button.services.core.logger">
+            <argument id="db" type="service"/>
+        </service>
+        <service class="mojDashButton\Services\Api\AuthenticationService"
+                 id="moj_dash_button.services.api.authentication_service">
+            <argument id="db" type="service"/>
+            <argument id="moj_dash_button.services.core.logger" type="service"/>
+        </service>
+        <service class="mojDashButton\Services\DashButton\BasketHandler"
+                 id="moj_dash_button.services.dash_button.basket_handler">
+            <argument id="db" type="service"/>
+            <argument id="events" type="service"/>
+        </service>
+        <service class="mojDashButton\Services\DashButton\ButtonService"
+                 id="moj_dash_button.services.dash_button.button_service">
+            <argument id="moj_dash_button.services.api.authentication_service" type="service"/>
+            <argument id="moj_dash_button.services.dash_button.db_collector" type="service"/>
+            <argument id="moj_dash_button.services.dash_button.basket_handler" type="service"/>
+            <argument id="moj_dash_button.services.core.logger" type="service"/>
+        </service>
+
+    </services>
+</container>
