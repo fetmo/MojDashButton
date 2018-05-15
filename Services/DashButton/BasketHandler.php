@@ -63,4 +63,19 @@ class BasketHandler
         return $insertSuccess;
     }
 
+    public function getProductsForUser($userID)
+    {
+        $selectBasket = 'SELECT * FROM moj_basket_details WHERE user_id = :userID';
+
+        return $this->db->fetchAll(
+            $selectBasket,
+            ['userID' => $userID]
+        );
+    }
+
+    public function createOrder($products, $userID)
+    {
+        return false;
+    }
+
 }

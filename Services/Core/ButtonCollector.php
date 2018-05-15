@@ -18,4 +18,10 @@ interface ButtonCollector
      */
     public function collectButton($buttonCode);
 
+    /**
+     * @param $userID
+     * @return array
+     */
+    public function collectButtonForUser($userID);
+
 }

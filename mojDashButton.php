@@ -17,27 +17,30 @@ use Shopware\Components\Plugin\Context\InstallContext;
 
 class mojDashButton extends Plugin
 {
+
+    public static function getSubscribedEvents()
+    {
+        return [
+            'Enlight_Controller_Action_PreDispatch_Frontend' => 'addTemplate',
+        ];
+    }
+
     public function install(InstallContext $context)
     {
         parent::install($context);
 
         $this->createModels();
 
-        /** @var CrudService $attributeCrudService */
-        $attributeCrudService = $this->container->get('shopware_attribute.crud_service');
-        $attributeCrudService->update(
-            's_user_attributes',
-            'moj_dash_buttons',
-            TypeMapping::TYPE_MULTI_SELECTION,
-            [
-                'entity' => DashButton::class,
-                'displayInBackend' => true,
-                'custom' => true,
-                'label' => 'Dash-Buttons'
-            ]
-        );
-
         return true;
+    }
+
+    public function addTemplate(\Enlight_Event_EventArgs $args)
+    {
+        /** @var \Enlight_Controller_Action $subject */
+        $subject = $args->get('subject');
+        $view = $subject->View();
+
+        $view->addTemplateDir($this->getPath() . '/Resources/views/');
     }
 
     private function createModels()
