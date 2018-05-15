@@ -3,17 +3,17 @@
 
 namespace mojDashButton;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Tools\SchemaTool;
 
 use mojDashButton\Models\DashBasketEntry;
 use mojDashButton\Models\DashButton;
 use mojDashButton\Models\DashLogEntry;
 
-use Shopware\Bundle\AttributeBundle\Service\CrudService;
-use Shopware\Bundle\AttributeBundle\Service\TypeMapping;
 use Shopware\Components\Model\ModelManager;
 use Shopware\Components\Plugin;
 use Shopware\Components\Plugin\Context\InstallContext;
+use Shopware\Components\Theme\LessDefinition;
 
 class mojDashButton extends Plugin
 {
@@ -22,6 +22,8 @@ class mojDashButton extends Plugin
     {
         return [
             'Enlight_Controller_Action_PreDispatch_Frontend' => 'addTemplate',
+            'Theme_Compiler_Collect_Plugin_Javascript' => 'collectJS',
+            'Theme_Compiler_Collect_Plugin_Less' => 'collectLess',
         ];
     }
 
@@ -41,6 +43,25 @@ class mojDashButton extends Plugin
         $view = $subject->View();
 
         $view->addTemplateDir($this->getPath() . '/Resources/views/');
+    }
+
+    public function collectJS()
+    {
+        return new ArrayCollection([
+            $this->getPath() . '/Resources/_public/src/js/jquery.product-suggest.js'
+        ]);
+    }
+
+    public function collectLess()
+    {
+        $less = new LessDefinition(
+            [],
+            [
+                $this->getPath() . '/Resources/_public/src/less/dashbutton.less'
+            ]
+        );
+
+        return new ArrayCollection([$less]);
     }
 
     private function createModels()

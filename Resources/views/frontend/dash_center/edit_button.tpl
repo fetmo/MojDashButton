@@ -6,7 +6,7 @@
 {block name="frontend_account_index_info"}
     <div class="panel content block has--border is--rounded">
         <form action="{url action=saveButton}" method="post" class="panel register--form">
-            <div class="panel register--personal">
+            <div class="panel edit--button">
                 <h2 class="panel--title is--underline">
                     {s name="DashButtonEditTitle"}Dash-Button verwalten{/s}
                 </h2>
@@ -15,27 +15,25 @@
                         <input type="hidden" name="buttonid" value="{$button->getId()}">
                         <input type="hidden" name="buttoncode" value="{$button->getButtonCode()}">
                         <div class="block-group panel--body">
-                            <label style="float:left"
-                                   for="buttoncode">{s name="DashButtonEditButtonCodeLabel"}Button Code{/s}</label>
+                            <label for="buttoncode">{s name="DashButtonEditButtonCodeLabel"}Button Code{/s}</label>
                             <input name="buttoncode" type="text" id="buttoncode"
-                                   disabled="disabled" style="float:right;"
+                                   disabled="disabled"
                                    readonly="readonly" aria-readonly="true"
                                    placeholder="{$button->getButtonCode()}"
                                    value="{$button->getButtonCode()}">
                         </div>
                         <div class="block-group panel--body">
-                            <label style="float:left"
-                                   for="quantity">{s name="DashButtonEditQuantityLabel"}Button Code{/s}</label>
-                            <input name="quantity" type="number" id="quantity" style="float:right;"
+                            <label for="quantity">{s name="DashButtonEditQuantityLabel"}Button Code{/s}</label>
+                            <input name="quantity" type="number" id="quantity"
                                    placeholder="{s name="DashButtonEditQuantityLabel"}Menge{/s}"
                                    value="{$button->getQuantity()}">
                         </div>
-                        <div class="block-group panel--body">
-                            <label style="float:left"
-                                   for="ordernumber">{s name="DashButtonEditOrdernumberLabel"}Button Code{/s}</label>
+                        <div class="block-group panel--body ordernumber--container">
+                            <label for="ordernumber">{s name="DashButtonEditOrdernumberLabel"}Button Code{/s}</label>
                             <input name="ordernumber" type="text" id="ordernumber" data-product-suggest="true"
                                    placeholder="{s name="DashButtonEditOrdernumberLabel"}Bestellnummer{/s}"
-                                   value="{$button->getOrdernumber()}" style="float:right;">
+                                   value="{$button->getOrdernumber()}">
+                            <div class="suggest--container is--hidden"></div>
                         </div>
                         <p>&nbsp;</p>
                     </div>

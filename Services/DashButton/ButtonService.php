@@ -64,7 +64,12 @@ class ButtonService
 
         $addResponse = $this->basketHandler->addProductForButton($button);
 
-        $this->logger->log('triggerClick' . ($addResponse) ? 'Success' : 'Fail', $button, 'Product add' . ($addResponse) ? 'succeeded' : 'failed');
+        $type = 'triggerClick';
+        $type .= ($addResponse) ? 'Success' : 'Fail';
+
+        $message = 'Product add ';
+        $message .= ($addResponse) ? 'succeeded' : 'failed';
+        $this->logger->log($type, $button,  $message);
 
         return $addResponse;
     }

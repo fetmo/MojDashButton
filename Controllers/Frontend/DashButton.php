@@ -1,6 +1,6 @@
 <?php
 
-class Shopware_Controllers_Frontend_DashButton extends Shopware_Controllers_Api_Rest
+class Shopware_Controllers_Frontend_DashButton extends Shopware_Controllers_Api_Rest implements \Shopware\Components\CSRFWhitelistAware
 {
 
     /**
@@ -32,6 +32,15 @@ class Shopware_Controllers_Frontend_DashButton extends Shopware_Controllers_Api_
         $this->token = $token;
         $this->buttonService = $this->get('moj_dash_button.services.dash_button.button_service');
     }
+
+    public function getWhitelistedCSRFActions()
+    {
+        return [
+            'getProduct',
+            'triggerClick'
+        ];
+    }
+
 
     public function getProductAction()
     {

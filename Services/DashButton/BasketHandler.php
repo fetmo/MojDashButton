@@ -65,7 +65,11 @@ class BasketHandler
 
     public function getProductsForUser($userID)
     {
-        $selectBasket = 'SELECT * FROM moj_basket_details WHERE user_id = :userID';
+        $selectBasket =
+            'SELECT button.button_code, basket.*
+              FROM moj_basket_details basket
+               INNER JOIN moj_dash_button button ON button.id = basket.button_id
+               WHERE basket.user_id = :userID';
 
         return $this->db->fetchAll(
             $selectBasket,
