@@ -77,6 +77,20 @@ class BasketHandler
         );
     }
 
+    public function getProductsForButton(DashButton $button)
+    {
+        $selectBasket =
+            'SELECT button.button_code, basket.*
+              FROM moj_basket_details basket
+               INNER JOIN moj_dash_button button ON button.id = basket.button_id
+               WHERE basket.button_id = :buttonid';
+
+        return $this->db->fetchAll(
+            $selectBasket,
+            ['buttonid' => $button->getId()]
+        );
+    }
+
     public function createOrder($products, $userID)
     {
         return false;

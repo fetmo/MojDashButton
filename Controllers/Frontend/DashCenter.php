@@ -42,6 +42,10 @@ class Shopware_Controllers_Frontend_DashCenter extends Shopware_Controllers_Fron
         $logs = $this->get('db')->fetchAll(
             'SELECT * FROM moj_dash_log WHERE button_id = :buttonid ORDER BY log_Date DESC, id DESC ', ['buttonid' => $button->getId()]);
 
+        $basketHandler = $this->get('moj_dash_button.services.dash_button.basket_handler');
+        $products = $basketHandler->getProductsForButton($button);
+
+        $this->View()->assign('products', $products);
         $this->View()->assign('logs', $logs);
         $this->View()->assign('button', $button);
     }
