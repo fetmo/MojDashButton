@@ -7,8 +7,16 @@
     <div class="panel content block has--border is--rounded">
         <form action="{url action=saveButton}" method="post" class="panel register--form">
             <div class="panel edit--button">
-                <h2 class="panel--title is--underline">
+                <h2 class="panel--title is--underline block-group">
                     {s name="DashButtonEditTitle"}Dash-Button verwalten{/s}
+
+                    <a href="{url action=removeButtonOverlay buttoncode=$button->getButtonCode()}"
+                       data-modalbox="true" data-mode="ajax" data-title="{s name="DashButtonEditDelete"}Dash-Button löschen?{/s}"
+                       data-height="200px"
+                       class="btn is--small delete--link">
+                        {s name="DashButtonEditDelete"}Dash-Button löschen?{/s}
+                        <i class="icon--cross"></i>
+                    </a>
                 </h2>
                 <div class="panel--body is--wide block-group">
                     <div class="register--buttoncode block">
@@ -23,13 +31,13 @@
                                    value="{$button->getButtonCode()}">
                         </div>
                         <div class="block-group panel--body">
-                            <label for="quantity">{s name="DashButtonEditQuantityLabel"}Button Code{/s}</label>
+                            <label for="quantity">{s name="DashButtonEditQuantityLabel"}Menge{/s}</label>
                             <input name="quantity" type="number" id="quantity"
                                    placeholder="{s name="DashButtonEditQuantityLabel"}Menge{/s}"
                                    value="{$button->getQuantity()}">
                         </div>
                         <div class="block-group panel--body ordernumber--container">
-                            <label for="ordernumber">{s name="DashButtonEditOrdernumberLabel"}Button Code{/s}</label>
+                            <label for="ordernumber">{s name="DashButtonEditOrdernumberLabel"}Bestellnummer{/s}</label>
                             <input name="ordernumber" type="text" id="ordernumber" data-product-suggest="true"
                                    placeholder="{s name="DashButtonEditOrdernumberLabel"}Bestellnummer{/s}"
                                    value="{$button->getOrdernumber()}">

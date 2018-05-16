@@ -7,8 +7,10 @@ use mojDashButton\Models\DashButton;
 use mojDashButton\Services\Api\AuthenticationService;
 use mojDashButton\Services\Core\ButtonCollector;
 use mojDashButton\Services\Core\Logger;
-use Shopware\Models\Article\Detail;
-use Shopware\Models\Article\Price;
+use Shopware\Bundle\StoreFrontBundle\Service\ContextServiceInterface;
+use Shopware\Bundle\StoreFrontBundle\Service\ListProductServiceInterface;
+use Shopware\Bundle\StoreFrontBundle\Struct\ListProduct;
+use Shopware\Bundle\StoreFrontBundle\Struct\Product\Price;
 use Shopware\Models\Customer\Customer;
 
 class ButtonService
@@ -42,12 +44,16 @@ class ButtonService
      * @param Logger $logger
      */
     public function __construct(AuthenticationService $authenticationService, ButtonCollector $buttonCollector,
-                                BasketHandler $basketHandler, Logger $logger)
+                                BasketHandler $basketHandler, Logger $logger, ListProductServiceInterface $listProduct,
+                                ContextServiceInterface $contextService)
     {
         $this->authenticationService = $authenticationService;
         $this->buttonCollector = $buttonCollector;
         $this->basketHandler = $basketHandler;
         $this->logger = $logger;
+
+        $this->listProduct = $listProduct;
+        $this->contextService = $contextService;
     }
 
     /**
@@ -84,19 +90,17 @@ class ButtonService
     {
         $button = $this->fetchButtonForToken($token);
 
-        $product = $button->getVariant();
+        $product = $this->listProduct->get($button->getOrdernumber(), $this->contextService->getContext());
 
         if (null === $product) {
             throw new \Exception('No Product configured');
         }
 
-        $article = $product->getArticle();
-
         $price = $this->getPriceForUser($product, $button->getUser());
 
         $productData = [
-            'title' => $article->getName(),
-            'active' => $product->getActive() && $article->getActive(),
+            'title' => $product->getName(),
+            'active' => $product->isAvailable(),
             'price' => $price
         ];
 
@@ -116,19 +120,19 @@ class ButtonService
     }
 
     /**
-     * @param Detail $product
+     * @param ListProduct $product
      * @param Customer $user
      * @return float
      */
-    private function getPriceForUser(Detail $product, Customer $user)
+    private function getPriceForUser(ListProduct $product, Customer $user)
     {
         $fPrice = 0.0;
 
         /** @var Price $price */
         foreach ($product->getPrices() as $price) {
-            if ($price->getFrom() == 0 && $price->getCustomerGroup() == $user->getGroupKey()) {
+            if ($price->getFrom() == 1 && $price->getCustomerGroup()->getKey() == $user->getGroupKey()) {
                 #@todo: check for VAT
-                $fPrice = $price->getPrice();
+                $fPrice = $price->getCalculatedPrice();
                 break;
             }
         }

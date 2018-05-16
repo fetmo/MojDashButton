@@ -57,8 +57,6 @@ class Shopware_Controllers_Frontend_DashCenter extends Shopware_Controllers_Fron
 
         $buttonCollector = $this->get('moj_dash_button.services.dash_button.db_collector');
 
-        var_dump($this->Request()->getPost());
-
         $buttonCode = $this->Request()->get('buttoncode');
         $buttonID = $this->Request()->get('buttonid');
         $button = null;
@@ -103,6 +101,51 @@ class Shopware_Controllers_Frontend_DashCenter extends Shopware_Controllers_Fron
         }
 
         $this->exitOnError('registerButton');
+    }
+
+    public function removeButtonOverlayAction()
+    {
+        $buttonCode = $this->Request()->get('buttoncode');
+        $this->View()->assign('buttoncode', $buttonCode);
+    }
+
+    public function removeButtonAction()
+    {
+        if (!$this->Request()->isPost()) {
+            $this->redirect([
+                'controller' => 'DashCenter',
+                'action' => 'registerButton'
+            ]);
+        }
+
+        $buttonCode = $this->Request()->get('buttoncode');
+
+        if (!$buttonCode) {
+            $this->redirect([
+                'controller' => 'DashCenter',
+                'action' => 'buttonOverview'
+            ]);
+        }
+
+        $buttonCollector = $this->get('moj_dash_button.services.dash_button.db_collector');
+        $button = $buttonCollector->collectButton($buttonCode);
+
+        if ($button->getUserId() !== $this->getUserId()) {
+            $this->redirect([
+                'controller' => 'DashCenter',
+                'action' => 'buttonOverview'
+            ]);
+        }
+
+        $db = $this->get('db');
+
+        $db->delete('moj_dash_button', 'id = ' . $button->getId());
+        $db->delete('moj_basket_details', 'button_id = ' . $button->getId());
+
+        $this->redirect([
+            'controller' => 'DashCenter',
+            'action' => 'buttonOverview'
+        ]);
     }
 
     private function exitOnError($action)

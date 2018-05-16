@@ -4,9 +4,9 @@
     {$smarty.block.parent}
 
     <li class="navigation--entry">
-        <a href="{url module='frontend' controller='DashCenter'}" title="{s name="DashCenter"}DashCenter{/s}"
+        <a href="{url module='frontend' controller='DashCenter'}" title="{s name="DashCenter"}Dash Center{/s}"
            class="navigation--link{if {controllerName} == 'DashCenter' || {controllerName} == 'DashCenterBasket'} is--active{/if}" rel="nofollow">
-            {s name="DashCenter"}DashCenter{/s}
+            {s name="DashCenter"}Dash Center{/s}
         </a>
     </li>
 {/block}

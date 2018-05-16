@@ -37,9 +37,6 @@ class DbCollector implements ButtonCollector
         ]);
 
         if(null === $button){
-            echo "<pre>";
-            debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-            die();
             throw new \Exception('Button not found');
         }
 

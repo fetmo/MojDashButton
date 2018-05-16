@@ -1,25 +1,33 @@
 .edit--button {
-  .panel--body {
-    label {
-      float: left;
+  .panel {
+    &--title{
+      .delete--link{
+        float:right;
+      }
     }
 
-    input {
-      float: right;
-    }
+    &--body {
+      label {
+        float: left;
+      }
 
-    .ordernumber--container {
-      position: relative;
+      input {
+        float: right;
+      }
 
-      .suggest--container {
-        position: absolute;
-        background-color: #fff;
-        top: 50px;
-        right: 10px;
-        border: 1px solid grey;
-        height: 250px;
-        overflow-y: scroll;
-        width: 290px;
+      .ordernumber--container {
+        position: relative;
+
+        .suggest--container {
+          position: absolute;
+          background-color: #fff;
+          top: 50px;
+          right: 10px;
+          border: 1px solid grey;
+          height: 250px;
+          overflow-y: scroll;
+          width: 290px;
+        }
       }
     }
   }
