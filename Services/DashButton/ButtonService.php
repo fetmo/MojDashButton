@@ -37,11 +37,24 @@ class ButtonService
     private $logger;
 
     /**
+     * @var ContextServiceInterface
+     */
+    private $contextService;
+
+    /**
+     * @var ListProductServiceInterface
+     */
+    private $listProduct;
+
+
+    /**
      * ButtonService constructor.
      * @param AuthenticationService $authenticationService
      * @param ButtonCollector $buttonCollector
      * @param BasketHandler $basketHandler
      * @param Logger $logger
+     * @param ListProductServiceInterface $listProduct
+     * @param ContextServiceInterface $contextService
      */
     public function __construct(AuthenticationService $authenticationService, ButtonCollector $buttonCollector,
                                 BasketHandler $basketHandler, Logger $logger, ListProductServiceInterface $listProduct,
@@ -131,7 +144,6 @@ class ButtonService
         /** @var Price $price */
         foreach ($product->getPrices() as $price) {
             if ($price->getFrom() == 1 && $price->getCustomerGroup()->getKey() == $user->getGroupKey()) {
-                #@todo: check for VAT
                 $fPrice = $price->getCalculatedPrice();
                 break;
             }

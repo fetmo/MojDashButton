@@ -75,12 +75,12 @@ class AuthenticationService
                 ['token' => $token]);
         }
 
-        return $this->tokenSave[$token];
+        return (string)$this->tokenSave[$token];
     }
 
     /**
      * @param $token
-     * @return string
+     * @return bool
      * @throws \Exception
      */
     public function validateToken($token)
