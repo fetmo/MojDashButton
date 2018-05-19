@@ -36,6 +36,16 @@ class mojDashButton extends Plugin
         return true;
     }
 
+    /**
+     * This method can be overridden
+     *
+     * @param Plugin\Context\ActivateContext $context
+     */
+    public function activate(Plugin\Context\ActivateContext $context)
+    {
+        $context->scheduleClearCache(InstallContext::CACHE_LIST_ALL);
+    }
+
     public function addTemplate(\Enlight_Event_EventArgs $args)
     {
         /** @var \Enlight_Controller_Action $subject */

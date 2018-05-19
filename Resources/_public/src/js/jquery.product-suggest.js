@@ -3,7 +3,7 @@
 
     $.plugin('mojProductSuggest', {
         defaults: {
-            'searchUrl': '/widgets/DashProductSearch/searchProduct?search=',
+            'searchUrl': '/widgets/DashProductSearch/searchProduct',
             'suggestSelector': '.suggest--container',
             'hiddenClass': 'is--hidden'
         },
@@ -45,7 +45,7 @@
 
             if(searchValue.length >= 3){
                 $.ajax({
-                    url: me.opts.searchUrl + searchValue,
+                    url: me.opts.searchUrl + '?search=' + searchValue,
                     success: function (response) {
                         me._$suggestBox.empty();
                         me._$suggestBox.addClass(me.opts.hiddenClass);

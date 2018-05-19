@@ -41,6 +41,7 @@
                             <div class="block-group panel--body ordernumber--container">
                                 <label for="ordernumber">{s name="DashButtonEditOrdernumberLabel"}Bestellnummer{/s}</label>
                                 <input name="ordernumber" type="text" id="ordernumber" data-product-suggest="true"
+                                       data-searchUrl="{url module=widgets controller=DashProductSearch action=searchProduct}"
                                        placeholder="{s name="DashButtonEditOrdernumberLabel"}Bestellnummer{/s}"
                                        value="{$button->getOrdernumber()}">
                                 <div class="suggest--container is--hidden"></div>
