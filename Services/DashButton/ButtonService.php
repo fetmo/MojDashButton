@@ -1,12 +1,12 @@
 <?php
 
-namespace mojDashButton\Services\DashButton;
+namespace MojDashButton\Services\DashButton;
 
 
-use mojDashButton\Models\DashButton;
-use mojDashButton\Services\Api\AuthenticationService;
-use mojDashButton\Services\Core\ButtonCollector;
-use mojDashButton\Services\Core\Logger;
+use MojDashButton\Models\DashButton;
+use MojDashButton\Services\Api\AuthenticationService;
+use MojDashButton\Services\Core\ButtonCollector;
+use MojDashButton\Services\Core\Logger;
 use Shopware\Bundle\StoreFrontBundle\Service\ContextServiceInterface;
 use Shopware\Bundle\StoreFrontBundle\Service\ListProductServiceInterface;
 use Shopware\Bundle\StoreFrontBundle\Struct\ListProduct;

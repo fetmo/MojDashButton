@@ -3,7 +3,7 @@
 class BasketHandlerTest extends PHPUnit_Framework_TestCase
 {
 
-    use \mojDashButton\Test\Integration\Services\Helper\ButtonCodeGenerator;
+    use \MojDashButton\Test\Integration\Services\Helper\ButtonCodeGenerator;
 
     /**
      * @var Enlight_Components_Db_Adapter_Pdo_Mysql
@@ -11,7 +11,7 @@ class BasketHandlerTest extends PHPUnit_Framework_TestCase
     private $db;
 
     /**
-     * @var \mojDashButton\Services\DashButton\DbRegisterService
+     * @var \MojDashButton\Services\DashButton\DbRegisterService
      */
     private $register;
 
@@ -86,7 +86,7 @@ class BasketHandlerTest extends PHPUnit_Framework_TestCase
 
     private function getBasketHandler()
     {
-        return new \mojDashButton\Services\DashButton\BasketHandler($this->db, $this->container->get('events'));
+        return new \MojDashButton\Services\DashButton\BasketHandler($this->db, $this->container->get('events'));
     }
 
     private function removeButtons($buttons)

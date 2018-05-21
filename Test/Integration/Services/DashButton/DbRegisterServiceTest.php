@@ -1,11 +1,11 @@
 <?php
 
-use mojDashButton\Services\DashButton\DbRegisterService;
+use MojDashButton\Services\DashButton\DbRegisterService;
 
 class DbRegisterServiceTest extends PHPUnit_Framework_TestCase
 {
 
-    use \mojDashButton\Test\Integration\Services\Helper\ButtonCodeGenerator;
+    use \MojDashButton\Test\Integration\Services\Helper\ButtonCodeGenerator;
 
     /**
      * @var \Shopware\Components\Model\ModelManager
@@ -18,7 +18,7 @@ class DbRegisterServiceTest extends PHPUnit_Framework_TestCase
     private $container;
 
     /**
-     * @var \mojDashButton\Models\DashButton
+     * @var \MojDashButton\Models\DashButton
      */
     private $button;
 
@@ -46,7 +46,7 @@ class DbRegisterServiceTest extends PHPUnit_Framework_TestCase
 
         $button = $this->getRegisterService()->registerButton($buttonCode);
 
-        $this->assertInstanceOf(\mojDashButton\Models\DashButton::class, $button);
+        $this->assertInstanceOf(\MojDashButton\Models\DashButton::class, $button);
 
         return $button;
     }
@@ -55,7 +55,7 @@ class DbRegisterServiceTest extends PHPUnit_Framework_TestCase
      * @depends testRegisterButton
      * @param $button
      */
-    public function testButtonAlreadyRegistered(\mojDashButton\Models\DashButton $button)
+    public function testButtonAlreadyRegistered(\MojDashButton\Models\DashButton $button)
     {
         $this->expectException(\Exception::class);
         $this->button = $button;
@@ -65,7 +65,7 @@ class DbRegisterServiceTest extends PHPUnit_Framework_TestCase
 
     private function getRegisterService()
     {
-        $loggerMock = $this->getMockBuilder(\mojDashButton\Services\Core\Logger::class)
+        $loggerMock = $this->getMockBuilder(\MojDashButton\Services\Core\Logger::class)
             ->disableOriginalConstructor()
             ->setMethods(['log'])
             ->getMock();

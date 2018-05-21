@@ -1,6 +1,6 @@
 <?php
 
-namespace mojDashButton\Test\Integration\Services\Helper;
+namespace MojDashButton\Test\Integration\Services\Helper;
 
 trait ButtonCodeGenerator
 {

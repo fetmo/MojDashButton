@@ -1,9 +1,9 @@
 <?php
 
-namespace mojDashButton\Services\DashButton;
+namespace MojDashButton\Services\DashButton;
 
 
-use mojDashButton\Models\DashButton;
+use MojDashButton\Models\DashButton;
 
 class BasketHandler
 {

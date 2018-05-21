@@ -1,8 +1,8 @@
 <?php
 
-namespace mojDashButton\Services\Core;
+namespace MojDashButton\Services\Core;
 
-use mojDashButton\Models\DashButton;
+use MojDashButton\Models\DashButton;
 
 class Logger
 {

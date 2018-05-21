@@ -1,8 +1,8 @@
 <?php
 
-namespace mojDashButton\Services\Api;
+namespace MojDashButton\Services\Api;
 
-use mojDashButton\Services\Core\Logger;
+use MojDashButton\Services\Core\Logger;
 
 class AuthenticationService
 {

@@ -1,19 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: doit-jung
- * Date: 14.05.2018
- * Time: 19:00
- */
 
-namespace mojDashButton\Models;
+namespace MojDashButton\Models;
 
 use Doctrine\ORM\Mapping as ORM;
 use Shopware\Components\Model\ModelEntity;
 
 /**
  * Class DashLogEntry
- * @package mojDashButton\Models
+ * @package MojDashButton\Models
  *
  * @ORM\Entity()
  * @ORM\Table(name="moj_dash_log")
@@ -54,7 +48,7 @@ class DashLogEntry extends ModelEntity
     /**
      * @var DashButton
      *
-     * @ORM\ManyToOne(targetEntity="\mojDashButton\Models\DashButton", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="\MojDashButton\Models\DashButton", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="button_id", referencedColumnName="id")
      */
     private $button;

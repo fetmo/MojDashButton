@@ -1,6 +1,6 @@
 <?php
 
-use \mojDashButton\Services\Api\AuthenticationService;
+use \MojDashButton\Services\Api\AuthenticationService;
 
 class AuthenticationServiceTest extends PHPUnit_Framework_TestCase
 {
@@ -11,7 +11,7 @@ class AuthenticationServiceTest extends PHPUnit_Framework_TestCase
     private $db;
 
     /**
-     * @var \mojDashButton\Services\Api\AuthenticationService
+     * @var \MojDashButton\Services\Api\AuthenticationService
      */
     private $authenticationService;
 
@@ -99,7 +99,7 @@ class AuthenticationServiceTest extends PHPUnit_Framework_TestCase
 
     private function generateLoggerMock()
     {
-        $loggerMock = $this->getMockBuilder(\mojDashButton\Services\Core\Logger::class)
+        $loggerMock = $this->getMockBuilder(\MojDashButton\Services\Core\Logger::class)
             ->disableOriginalConstructor()
             ->setMethods(['log'])
             ->getMock();
@@ -129,7 +129,7 @@ class AuthenticationServiceTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \mojDashButton\Services\Api\AuthenticationService
+     * @return \MojDashButton\Services\Api\AuthenticationService
      */
     private function getAuthenticationService()
     {

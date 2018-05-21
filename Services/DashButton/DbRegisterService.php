@@ -6,13 +6,13 @@
  * Time: 20:13
  */
 
-namespace mojDashButton\Services\DashButton;
+namespace MojDashButton\Services\DashButton;
 
 
-use mojDashButton\Models\DashButton;
-use mojDashButton\Services\Core\ButtonCollector;
-use mojDashButton\Services\Core\Logger;
-use mojDashButton\Services\Core\RegisterService;
+use MojDashButton\Models\DashButton;
+use MojDashButton\Services\Core\ButtonCollector;
+use MojDashButton\Services\Core\Logger;
+use MojDashButton\Services\Core\RegisterService;
 use Shopware\Components\Model\ModelManager;
 
 class DbRegisterService implements RegisterService

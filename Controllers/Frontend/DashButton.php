@@ -4,7 +4,7 @@ class Shopware_Controllers_Frontend_DashButton extends Shopware_Controllers_Api_
 {
 
     /**
-     * @var \mojDashButton\Services\Api\AuthenticationService
+     * @var \MojDashButton\Services\Api\AuthenticationService
      */
     private $authenticationService;
 
@@ -14,7 +14,7 @@ class Shopware_Controllers_Frontend_DashButton extends Shopware_Controllers_Api_
     private $token;
 
     /**
-     * @var \mojDashButton\Services\DashButton\ButtonService
+     * @var \MojDashButton\Services\DashButton\ButtonService
      */
     private $buttonService;
 

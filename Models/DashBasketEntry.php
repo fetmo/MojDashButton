@@ -1,13 +1,13 @@
 <?php
 
-namespace mojDashButton\Models;
+namespace MojDashButton\Models;
 
 use Doctrine\ORM\Mapping as ORM;
 use Shopware\Components\Model\ModelEntity;
 
 /**
  * Class DashBasketEntry
- * @package mojDashButton\Models
+ * @package MojDashButton\Models
  *
  * @ORM\Entity()
  * @ORM\Table(name="moj_basket_details")
@@ -41,7 +41,7 @@ class DashBasketEntry extends ModelEntity
     /**
      * @var DashButton
      *
-     * @ORM\ManyToOne(targetEntity="\mojDashButton\Models\DashButton", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="\MojDashButton\Models\DashButton", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="button_id", referencedColumnName="id")
      */
     private $button;

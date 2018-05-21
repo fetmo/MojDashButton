@@ -3,7 +3,7 @@
 class ButtonServiceTest extends PHPUnit_Framework_TestCase
 {
 
-    use \mojDashButton\Test\Integration\Services\Helper\ButtonCodeGenerator;
+    use \MojDashButton\Test\Integration\Services\Helper\ButtonCodeGenerator;
 
     /**
      * @var Enlight_Components_Db_Adapter_Pdo_Mysql
@@ -11,7 +11,7 @@ class ButtonServiceTest extends PHPUnit_Framework_TestCase
     private $db;
 
     /**
-     * @var \mojDashButton\Services\DashButton\DbRegisterService
+     * @var \MojDashButton\Services\DashButton\DbRegisterService
      */
     private $register;
 
@@ -61,7 +61,7 @@ class ButtonServiceTest extends PHPUnit_Framework_TestCase
     /**
      * @depends testGetProductForButton
      * @param $data
-     * @return \mojDashButton\Models\DashButton
+     * @return \MojDashButton\Models\DashButton
      */
     public function testTriggerClickForButton($data)
     {
@@ -116,7 +116,7 @@ class ButtonServiceTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return mixed|\mojDashButton\Services\DashButton\ButtonService
+     * @return mixed|\MojDashButton\Services\DashButton\ButtonService
      */
     private function getButtonService()
     {
@@ -125,7 +125,7 @@ class ButtonServiceTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return mixed|\mojDashButton\Services\Api\AuthenticationService
+     * @return mixed|\MojDashButton\Services\Api\AuthenticationService
      */
     private function getAuthService()
     {

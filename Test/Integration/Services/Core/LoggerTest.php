@@ -9,7 +9,7 @@ class LoggerTest extends PHPUnit_Framework_TestCase
         $type = 'phpunit';
         $whereType = 'type = "' . $type . '"';
 
-        $logger = new \mojDashButton\Services\Core\Logger($db);
+        $logger = new \MojDashButton\Services\Core\Logger($db);
 
         $logger->log($type, null, 'First Log');
 
@@ -17,9 +17,9 @@ class LoggerTest extends PHPUnit_Framework_TestCase
         $this->assertCount(1, $logs);
 
         $logger->log($type, null, 'Another Log');
-        $logger->log($type, new \mojDashButton\Models\DashButton(), 'Another Log');
+        $logger->log($type, new \MojDashButton\Models\DashButton(), 'Another Log');
         $logger->log($type, null, 'Another Log');
-        $logger->log($type, new \mojDashButton\Models\DashButton(), 'Another Log');
+        $logger->log($type, new \MojDashButton\Models\DashButton(), 'Another Log');
 
         $logs = $db->fetchAll('SELECT * FROM moj_dash_log WHERE ' . $whereType);
         $this->assertCount(5, $logs);

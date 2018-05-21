@@ -6,7 +6,7 @@
  * Time: 20:11
  */
 
-namespace mojDashButton\Services\Core;
+namespace MojDashButton\Services\Core;
 
 
 interface ButtonCollector

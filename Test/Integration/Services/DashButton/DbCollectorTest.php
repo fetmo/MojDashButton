@@ -1,11 +1,11 @@
 <?php
 
-use mojDashButton\Services\DashButton\DbCollector;
+use MojDashButton\Services\DashButton\DbCollector;
 
 class DbCollectorTest extends PHPUnit_Framework_TestCase
 {
 
-    use \mojDashButton\Test\Integration\Services\Helper\ButtonCodeGenerator;
+    use \MojDashButton\Test\Integration\Services\Helper\ButtonCodeGenerator;
 
     /**
      * @var \Shopware\Components\Model\ModelManager
@@ -49,7 +49,7 @@ class DbCollectorTest extends PHPUnit_Framework_TestCase
 
     private function createButton($buttonCode)
     {
-        $dashButton = new \mojDashButton\Models\DashButton();
+        $dashButton = new \MojDashButton\Models\DashButton();
         $dashButton->setButtonCode($buttonCode);
         $dashButton->setQuantity(1);
         $dashButton->setOrdernumber('SWAG-UNIT');

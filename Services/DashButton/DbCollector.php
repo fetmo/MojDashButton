@@ -1,9 +1,9 @@
 <?php
 
-namespace mojDashButton\Services\DashButton;
+namespace MojDashButton\Services\DashButton;
 
-use mojDashButton\Models\DashButton;
-use mojDashButton\Services\Core\ButtonCollector;
+use MojDashButton\Models\DashButton;
+use MojDashButton\Services\Core\ButtonCollector;
 use Shopware\Components\Model\ModelManager;
 
 class DbCollector implements ButtonCollector

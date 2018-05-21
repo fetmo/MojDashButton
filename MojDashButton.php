@@ -1,21 +1,21 @@
 <?php
 
 
-namespace mojDashButton;
+namespace MojDashButton;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Tools\SchemaTool;
 
-use mojDashButton\Models\DashBasketEntry;
-use mojDashButton\Models\DashButton;
-use mojDashButton\Models\DashLogEntry;
+use MojDashButton\Models\DashBasketEntry;
+use MojDashButton\Models\DashButton;
+use MojDashButton\Models\DashLogEntry;
 
 use Shopware\Components\Model\ModelManager;
 use Shopware\Components\Plugin;
 use Shopware\Components\Plugin\Context\InstallContext;
 use Shopware\Components\Theme\LessDefinition;
 
-class mojDashButton extends Plugin
+class MojDashButton extends Plugin
 {
 
     public static function getSubscribedEvents()
