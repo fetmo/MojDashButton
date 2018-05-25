@@ -18,6 +18,11 @@ class AuthenticationService
     private $logger;
 
     /**
+     * @var IdentifierService
+     */
+    private $identifierService;
+
+    /**
      * @var string
      */
     private $tokenSecret = 'TOPSECRET';
@@ -32,10 +37,12 @@ class AuthenticationService
      * @param \Enlight_Components_Db_Adapter_Pdo_Mysql $db
      * @param Logger $logger
      */
-    public function __construct(\Enlight_Components_Db_Adapter_Pdo_Mysql $db, Logger $logger)
+    public function __construct(\Enlight_Components_Db_Adapter_Pdo_Mysql $db, Logger $logger, IdentifierService $identifierService)
     {
         $this->db = $db;
         $this->logger = $logger;
+        $this->identifierService = $identifierService;
+
         $this->tokenSave = [];
     }
 
@@ -46,6 +53,8 @@ class AuthenticationService
      */
     public function generateToken($buttonCode)
     {
+        $buttonCode = $this->identifierService->getButtonCodeFromIdentifier($buttonCode);
+
         $secretSha = $this->getSecret();
 
         $token = $this->db->fetchOne(

@@ -58,7 +58,6 @@ class DbRegisterService implements RegisterService
         }catch (\Exception $exception){
             $button = new DashButton();
             $button->setButtonCode($buttonCode);
-            $button->setQuantity(0);
 
             $this->modelManager->persist($button);
             $this->modelManager->flush($button);

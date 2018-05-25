@@ -8,6 +8,9 @@ use Doctrine\ORM\Tools\SchemaTool;
 
 use MojDashButton\Models\DashBasketEntry;
 use MojDashButton\Models\DashButton;
+use MojDashButton\Models\DashButtonConfig;
+use MojDashButton\Models\DashButtonProduct;
+use MojDashButton\Models\DashButtonRule;
 use MojDashButton\Models\DashLogEntry;
 
 use Shopware\Components\Model\ModelManager;
@@ -82,7 +85,10 @@ class MojDashButton extends Plugin
         $metaData = [
             $models->getClassMetadata(DashButton::class),
             $models->getClassMetadata(DashBasketEntry::class),
-            $models->getClassMetadata(DashLogEntry::class)
+            $models->getClassMetadata(DashLogEntry::class),
+            $models->getClassMetadata(DashButtonConfig::class),
+            $models->getClassMetadata(DashButtonProduct::class),
+            $models->getClassMetadata(DashButtonRule::class)
         ];
 
         $schemaTool = new SchemaTool($models);

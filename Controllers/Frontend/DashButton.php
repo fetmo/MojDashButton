@@ -65,7 +65,7 @@ class Shopware_Controllers_Frontend_DashButton extends Shopware_Controllers_Api_
         }
 
         try {
-            $success = $this->buttonService->triggerClick($this->token);
+            $success = $this->buttonService->triggerClick($this->token, $this->Request()->getPost('identifier', ''));
         } catch (\Exception $exception) {
             $success = false;
         }

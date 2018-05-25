@@ -4,6 +4,7 @@ namespace MojDashButton\Services\DashButton;
 
 
 use MojDashButton\Models\DashButton;
+use MojDashButton\Models\DashButtonProduct;
 
 class BasketHandler
 {
@@ -31,17 +32,18 @@ class BasketHandler
 
     /**
      * @param DashButton $button
+     * @param DashButtonProduct $buttonProduct
      * @return bool
      * @throws \Exception
      */
-    public function addProductForButton(DashButton $button)
+    public function addProductForButton(DashButton $button, DashButtonProduct $buttonProduct)
     {
         $insertArguments = [
             'button_id' => $button->getId(),
-            'quantity' => $button->getQuantity(),
+            'quantity' => $buttonProduct->getQuantity(),
             'basket_date' => date("Y-m-d H:i:s"),
             'user_id' => $button->getUserId(),
-            'ordernumber' => $button->getOrdernumber()
+            'ordernumber' => $buttonProduct->getOrdernumber()
         ];
 
         $insertArguments = $this->eventManager->filter('DashButton_AddToBasket_FilterArguments', $insertArguments, [
@@ -58,7 +60,7 @@ class BasketHandler
         }
 
         $insertArguments['basketId'] = $this->db->lastInsertId('moj_basket_details');
-        $this->eventManager->notify('DashButton_AddToBasket_FilterArguments', $insertArguments);
+        $this->eventManager->notify('DashButton_AddToBasket_Finish', $insertArguments);
 
         return $insertSuccess;
     }

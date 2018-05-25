@@ -20,6 +20,9 @@ class ButtonServiceTest extends PHPUnit_Framework_TestCase
      */
     private $container;
 
+    /**
+     * @var array
+     */
     private $buttons;
 
     protected function setUp()
@@ -44,15 +47,21 @@ class ButtonServiceTest extends PHPUnit_Framework_TestCase
 
     public function testGetProductForButton()
     {
-        $button = $this->createButton($this->getButtonCode());
+        $products = [
+            ['ordernumber' => 'SW10009.10', 'quantity' => 10]
+        ];
+
+        $button = $this->createButton($this->getButtonCode(), $products);
 
         $token = $this->getAuthService()->generateToken($button->getButtonCode());
 
         $productData = $this->getButtonService()->getProduct($token);
 
-        $this->assertNotEmpty($productData);
-        $this->assertNotEmpty($productData);
-        $this->assertNotEmpty($productData);
+        $this->assertNotEmpty($productData['id']);
+        $this->assertNotEmpty($productData['title']);
+        $this->assertNotEmpty($productData['price']);
+        $this->assertNotEmpty($productData['quantity']);
+        $this->assertNotEmpty($productData['identifier']);
 
         return [$token, $button];
 
@@ -73,47 +82,78 @@ class ButtonServiceTest extends PHPUnit_Framework_TestCase
         return $button;
     }
 
-
     /**
      * @depends testTriggerClickForButton
-     * @param $oldButton
+     * @param $firstButton
+     * @return array
      */
-    public function testGetNoProductForUnconfiguredButton($oldButton)
+    public function testGetProductForMultiProductButton($firstButton)
+    {
+        $products = [
+            ['ordernumber' => 'SW10009.10', 'quantity' => 10],
+            ['ordernumber' => 'SW10010', 'quantity' => 5],
+        ];
+
+        $button = $this->createButton($this->getButtonCode(), $products, \MojDashButton\Models\DashButton::MULTIPRODUCTMODE);
+
+        $token = $this->getAuthService()->generateToken($button->getButtonCode());
+
+        $productData = $this->getButtonService()->getProduct($token);
+        $identifier = '';
+
+        $this->assertCount(2, $productData);
+
+        foreach ($productData as $key => $product) {
+            $origProduct = $products[$key];
+
+            $this->assertNotEmpty($product['id']);
+            $this->assertNotEmpty($product['title']);
+            $this->assertNotEmpty($product['price']);
+            $this->assertNotEmpty($product['quantity']);
+            $this->assertEquals($product['quantity'], $origProduct['quantity']);
+            $this->assertNotEmpty($product['identifier']);
+
+            $identifier = $product['identifier'];
+        }
+
+        return [
+            [$firstButton, $button],
+            $token,
+            $identifier
+        ];
+    }
+
+    /**
+     * @depends testGetProductForMultiProductButton
+     * @param $data
+     * @return array
+     */
+    public function testTriggerClickForMultiProductButton($data)
+    {
+        list($buttons, $token, $identifier) = $data;
+
+        $this->assertTrue($this->getButtonService()->triggerClick($token, $identifier));
+
+        return $buttons;
+    }
+
+    /**
+     * @depends testTriggerClickForMultiProductButton
+     * @param array $oldButtons
+     */
+    public function testGetNoProductForUnconfiguredButton($oldButtons)
     {
         $this->expectException(\Exception::class);
 
-        $button = $this->createButton($this->getButtonCode(), '');
-        $this->buttons = [$oldButton, $button];
+        $button = $this->createButton($this->getButtonCode());
+        $this->buttons = $oldButtons;
+        $this->buttons[] = $button;
 
         $token = $this->getAuthService()->generateToken($button->getButtonCode());
 
         $this->getButtonService()->getProduct($token);
     }
 
-    private function removeButtons($buttons)
-    {
-        foreach ($buttons as $button) {
-            $this->db->delete('moj_basket_details', 'button_id = ' . $button->getId());
-            $this->db->delete('moj_dash_log', 'button_id = ' . $button->getId());
-            $this->db->delete('moj_dash_button', 'id = ' . $button->getId());
-        }
-    }
-
-    private function createButton($buttoncode, $product = 'SW10009.10')
-    {
-        $em = $this->container->get('models');
-
-        $button = $this->register->registerButton($buttoncode);
-
-        $button->setOrdernumber($product);
-        $button->setUserId(1);
-        $button->setUser($em->getRepository(\Shopware\Models\Customer\Customer::class)->find(1));
-
-        $em->persist($button);
-        $em->flush($button);
-
-        return $button;
-    }
 
     /**
      * @return mixed|\MojDashButton\Services\DashButton\ButtonService

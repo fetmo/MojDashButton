@@ -2,8 +2,10 @@
 
 namespace MojDashButton\Models;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Shopware\Components\Model\ModelEntity;
+use Shopware\Models\Customer\Customer;
 
 /**
  * Class DashButton
@@ -14,6 +16,9 @@ use Shopware\Components\Model\ModelEntity;
  */
 class DashButton extends ModelEntity
 {
+
+    CONST SINGLEPRODUCTMODE = 1;
+    CONST MULTIPRODUCTMODE = 2;
 
     /**
      * @var int
@@ -34,24 +39,16 @@ class DashButton extends ModelEntity
     /**
      * @var int
      *
-     * @ORM\Column(name="quantity", type="integer", options={"default": 1} )
+     * @ORM\Column(name="product_mode", type="integer", options={"default": 1})
      */
-    private $quantity;
+    private $productMode;
 
     /**
-     * @var \Shopware\Models\Article\Detail
+     * @var DashButtonProduct[]
      *
-     * @ORM\ManyToOne(targetEntity="Shopware\Models\Article\Detail")
-     * @ORM\JoinColumn(name="ordernumber", referencedColumnName="ordernumber")
+     * @ORM\OneToMany(targetEntity="\MojDashButton\Models\DashButtonProduct", mappedBy="button")
      */
-    private $variant;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="ordernumber", type="string", nullable=true)
-     */
-    private $ordernumber;
+    private $products;
 
     /**
      * @var \Shopware\Models\Customer\Customer
@@ -69,6 +66,15 @@ class DashButton extends ModelEntity
     private $userId;
 
     /**
+     * DashButton constructor.
+     */
+    public function __construct()
+    {
+        $this->products = new ArrayCollection();
+        $this->productMode = self::SINGLEPRODUCTMODE;
+    }
+
+    /**
      * @return int
      */
     public function getId()
@@ -79,7 +85,7 @@ class DashButton extends ModelEntity
     /**
      * @return string
      */
-    public function getButtonCode()
+    public function getButtonCode(): string
     {
         return $this->buttonCode;
     }
@@ -87,7 +93,7 @@ class DashButton extends ModelEntity
     /**
      * @param string $buttonCode
      */
-    public function setButtonCode($buttonCode)
+    public function setButtonCode(string $buttonCode)
     {
         $this->buttonCode = $buttonCode;
     }
@@ -95,63 +101,55 @@ class DashButton extends ModelEntity
     /**
      * @return int
      */
-    public function getQuantity()
+    public function getProductMode(): int
     {
-        return $this->quantity;
+        return $this->productMode;
     }
 
     /**
-     * @param int $quantity
+     * @param int $productMode
      */
-    public function setQuantity($quantity)
+    public function setProductMode(int $productMode)
     {
-        $this->quantity = $quantity;
+        $this->productMode = $productMode;
     }
 
     /**
-     * @return \Shopware\Models\Article\Detail
+     * @return DashButtonProduct[]
      */
-    public function getVariant()
+    public function getProducts(): array
     {
-        return $this->variant;
+        return $this->products->toArray();
     }
 
     /**
-     * @param \Shopware\Models\Article\Detail $variant
+     * @param DashButtonProduct[] $products
      */
-    public function setVariant($variant)
+    public function setProducts(array $products)
     {
-        $this->variant = $variant;
+        $this->products = $products;
     }
 
     /**
-     * @return string
+     * @param DashButtonProduct $product
      */
-    public function getOrdernumber()
+    public function addProduct(DashButtonProduct $product)
     {
-        return $this->ordernumber;
+        $this->products->add($product);
     }
 
     /**
-     * @param string $ordernumber
+     * @return Customer
      */
-    public function setOrdernumber($ordernumber)
-    {
-        $this->ordernumber = $ordernumber;
-    }
-
-    /**
-     * @return \Shopware\Models\Customer\Customer
-     */
-    public function getUser()
+    public function getUser(): Customer
     {
         return $this->user;
     }
 
     /**
-     * @param \Shopware\Models\Customer\Customer $user
+     * @param Customer $user
      */
-    public function setUser($user)
+    public function setUser(Customer $user)
     {
         $this->user = $user;
     }
@@ -159,7 +157,7 @@ class DashButton extends ModelEntity
     /**
      * @return int
      */
-    public function getUserId()
+    public function getUserId(): int
     {
         return $this->userId;
     }
@@ -167,7 +165,7 @@ class DashButton extends ModelEntity
     /**
      * @param int $userId
      */
-    public function setUserId($userId)
+    public function setUserId(int $userId)
     {
         $this->userId = $userId;
     }

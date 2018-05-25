@@ -5,6 +5,7 @@ namespace MojDashButton\Services\DashButton;
 
 use MojDashButton\Models\DashButton;
 use MojDashButton\Services\Api\AuthenticationService;
+use MojDashButton\Services\Api\IdentifierService;
 use MojDashButton\Services\Core\ButtonCollector;
 use MojDashButton\Services\Core\Logger;
 use Shopware\Bundle\StoreFrontBundle\Service\ContextServiceInterface;
@@ -37,6 +38,11 @@ class ButtonService
     private $logger;
 
     /**
+     * @var IdentifierService
+     */
+    private $identifierService;
+
+    /**
      * @var ContextServiceInterface
      */
     private $contextService;
@@ -53,78 +59,106 @@ class ButtonService
      * @param ButtonCollector $buttonCollector
      * @param BasketHandler $basketHandler
      * @param Logger $logger
+     * @param IdentifierService $identifierService
      * @param ListProductServiceInterface $listProduct
      * @param ContextServiceInterface $contextService
      */
     public function __construct(AuthenticationService $authenticationService, ButtonCollector $buttonCollector,
-                                BasketHandler $basketHandler, Logger $logger, ListProductServiceInterface $listProduct,
-                                ContextServiceInterface $contextService)
+                                BasketHandler $basketHandler, Logger $logger, IdentifierService $identifierService,
+                                ListProductServiceInterface $listProduct, ContextServiceInterface $contextService)
     {
         $this->authenticationService = $authenticationService;
         $this->buttonCollector = $buttonCollector;
         $this->basketHandler = $basketHandler;
         $this->logger = $logger;
+        $this->identifierService = $identifierService;
 
         $this->listProduct = $listProduct;
         $this->contextService = $contextService;
     }
 
     /**
-     * @param $token
+     * @param string $token
+     * @param string $identifier
      * @return bool
      *
      * @throws \Exception
      */
-    public function triggerClick($token)
+    public function triggerClick(string $token, string $identifier = '')
     {
+        $dashButtonProduct = null;
         $button = $this->fetchButtonForToken($token);
 
         $this->logger->log('triggerClick', $button, 'Click got triggered');
 
-        $addResponse = $this->basketHandler->addProductForButton($button);
+        $dashButtonProduct = $this->getDashProductForIdentifier($identifier, $button);
+
+        if (null === $dashButtonProduct) {
+            throw new \Exception('No Product configured');
+        }
+
+        $addResponse = $this->basketHandler->addProductForButton($button, $dashButtonProduct);
 
         $type = 'triggerClick';
         $type .= ($addResponse) ? 'Success' : 'Fail';
 
         $message = 'Product add ';
         $message .= ($addResponse) ? 'succeeded' : 'failed';
-        $this->logger->log($type, $button,  $message);
+        $this->logger->log($type, $button, $message);
 
         return $addResponse;
     }
 
     /**
-     * @param $token
+     * @param string $token
      * @return array
-     *
      * @throws \Exception
      */
-    public function getProduct($token)
+    public function getProduct(string $token)
     {
         $button = $this->fetchButtonForToken($token);
+        $productPosition = [];
 
-        $product = $this->listProduct->get($button->getOrdernumber(), $this->contextService->getContext());
+        foreach ($button->getProducts() as $dashButtonProduct) {
+            $productPosition[$dashButtonProduct->getOrdernumber()] = [
+                'id' => $dashButtonProduct->getId(),
+                'quantity' => $dashButtonProduct->getQuantity()
+            ];
+        }
 
-        if (null === $product) {
+        $products = $this->listProduct->getList(\array_keys($productPosition), $this->contextService->getContext());
+
+        if (0 === \count($products)) {
             throw new \Exception('No Product configured');
         }
 
-        $price = $this->getPriceForUser($product, $button->getUser());
+        $productData = [];
+        foreach ($products as $product) {
+            $price = $this->getPriceForUser($product, $button->getUser());
+            $productPositionData = $productPosition[$product->getNumber()];
 
-        $productData = [
-            'title' => $product->getName(),
-            'active' => $product->isAvailable(),
-            'price' => $price
-        ];
+            $productData[] = [
+                'id' => $productPositionData['id'],
+                'title' => $product->getName(),
+                'active' => $product->isAvailable(),
+                'price' => $price,
+                'quantity' => $productPositionData['quantity']
+            ];
+        }
+
+        $productData = $this->identifierService->createIdentifierForProducts($button->getButtonCode(), $productData);
+        if (DashButton::SINGLEPRODUCTMODE === $button->getProductMode()) {
+            $productData = $productData[0];
+        }
 
         return $productData;
     }
 
     /**
-     * @param $token
+     * @param string $token
      * @return DashButton
      */
-    private function fetchButtonForToken($token)
+    private function fetchButtonForToken(string $token): DashButton
     {
         $button = $this->buttonCollector->collectButton(
             $this->authenticationService->fetchToken($token)
@@ -150,6 +184,30 @@ class ButtonService
         }
 
         return $fPrice;
+    }
+
+    /**
+     * @param string $identifier
+     * @param $button
+     * @return mixed
+     */
+    private function getDashProductForIdentifier(string $identifier, DashButton $button)
+    {
+        $dashButtonProduct = null;
+
+        if ($identifier !== '') {
+            $dashButtonProducts = $button->getProducts();
+            foreach ($dashButtonProducts as $dashProduct) {
+                if ($identifier === $this->identifierService->createIdentifierForProduct($button->getButtonCode(), $dashProduct->getId())) {
+                    $dashButtonProduct = $dashProduct;
+                    break;
+                }
+            }
+        } else {
+            $dashButtonProduct = $button->getProducts()[0];
+        }
+
+        return $dashButtonProduct;
     }
 
 }

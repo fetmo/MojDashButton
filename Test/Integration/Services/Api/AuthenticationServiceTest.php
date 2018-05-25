@@ -1,6 +1,7 @@
 <?php
 
 use \MojDashButton\Services\Api\AuthenticationService;
+use \MojDashButton\Services\Api\IdentifierService;
 
 class AuthenticationServiceTest extends PHPUnit_Framework_TestCase
 {
@@ -97,6 +98,54 @@ class AuthenticationServiceTest extends PHPUnit_Framework_TestCase
         $this->deleteButton();
     }
 
+    /**
+     * @return array
+     */
+    public function testAuthTokenGenerateSuccessfullyForIdentifier()
+    {
+        $buttonCode = time() . 'BUTTON';
+        $identifier = $buttonCode . IdentifierService::SEPARATOR . rand(1, 10);
+
+        $this->createButton($buttonCode);
+
+        $authenticationService = $this->getAuthenticationService();
+
+        $authToken = $authenticationService->generateToken($identifier);
+
+        $this->assertNotEmpty($authToken);
+
+        return ['buttoncode' => $buttonCode, 'token' => $authToken, 'identifier' => $identifier];
+    }
+
+    /**
+     * @depends testAuthTokenGenerateSuccessfully
+     * @param $data
+     */
+    public function testFetchTokenSuccessfullyForIdentifier($data)
+    {
+        $buttoncode = $data['buttoncode'];
+        $token = $data['token'];
+
+        $authenticationService = $this->getAuthenticationService();
+
+        $this->assertSame($authenticationService->fetchToken($token), $buttoncode);
+
+        return $token;
+    }
+
+    /**
+     * @depends testFetchTokenSuccessfully
+     * @param $token
+     */
+    public function testValidateTokenSuccessfullyForIdentifier($token)
+    {
+        $authenticationService = $this->getAuthenticationService();
+
+        $this->assertTrue($authenticationService->validateToken($token));
+
+        $this->deleteButton();
+    }
+
     private function generateLoggerMock()
     {
         $loggerMock = $this->getMockBuilder(\MojDashButton\Services\Core\Logger::class)
@@ -134,7 +183,7 @@ class AuthenticationServiceTest extends PHPUnit_Framework_TestCase
     private function getAuthenticationService()
     {
         if (null == $this->authenticationService) {
-            $this->authenticationService = new AuthenticationService($this->db, $this->generateLoggerMock());
+            $this->authenticationService = new AuthenticationService($this->db, $this->generateLoggerMock(), new IdentifierService());
         }
 
         return $this->authenticationService;
