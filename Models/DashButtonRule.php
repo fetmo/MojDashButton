@@ -36,7 +36,7 @@ class DashButtonRule extends ModelEntity
      * @var DashButtonProduct
      *
      * @ORM\ManyToOne(targetEntity="\MojDashButton\Models\DashButtonProduct")
-     * @ORM\JoinColumn(name="product_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="product_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $product;
 

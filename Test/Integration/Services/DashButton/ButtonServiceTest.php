@@ -11,11 +11,6 @@ class ButtonServiceTest extends PHPUnit_Framework_TestCase
     private $db;
 
     /**
-     * @var \MojDashButton\Services\DashButton\DbRegisterService
-     */
-    private $register;
-
-    /**
      * @var \Shopware\Components\DependencyInjection\Container
      */
     private $container;
@@ -32,8 +27,6 @@ class ButtonServiceTest extends PHPUnit_Framework_TestCase
         $this->container = Shopware()->Container();
 
         $this->db = $this->container->get('db');
-        $this->register = $this->container->get('moj_dash_button.services.dash_button.db_register_service');
-
     }
 
     protected function tearDown()
@@ -152,6 +145,21 @@ class ButtonServiceTest extends PHPUnit_Framework_TestCase
         $token = $this->getAuthService()->generateToken($button->getButtonCode());
 
         $this->getButtonService()->getProduct($token);
+    }
+
+    /**
+     * @depends testGetNoProductForUnconfiguredButton
+     */
+    public function testTriggerClickNoProductForUnconfiguredButton()
+    {
+        $this->expectException(\Exception::class);
+
+        $button = $this->createButton($this->getButtonCode());
+        $this->buttons = [$button];
+
+        $token = $this->getAuthService()->generateToken($button->getButtonCode());
+
+        $this->getButtonService()->triggerClick($token);
     }
 
 

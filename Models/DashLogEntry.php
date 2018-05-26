@@ -48,8 +48,8 @@ class DashLogEntry extends ModelEntity
     /**
      * @var DashButton
      *
-     * @ORM\ManyToOne(targetEntity="\MojDashButton\Models\DashButton", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(name="button_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="\MojDashButton\Models\DashButton")
+     * @ORM\JoinColumn(name="button_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $button;
 

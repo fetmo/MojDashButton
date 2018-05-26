@@ -28,7 +28,7 @@ class DashButtonConfig extends ModelEntity
      * @var DashButton
      *
      * @ORM\OneToOne(targetEntity="\MojDashButton\Models\DashButton")
-     * @ORM\JoinColumn(name="button_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="button_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $button;
 

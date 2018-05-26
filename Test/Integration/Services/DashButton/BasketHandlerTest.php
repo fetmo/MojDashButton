@@ -1,5 +1,8 @@
 <?php
 
+use \MojDashButton\Models\DashButton;
+use \MojDashButton\Services\DashButton as DBServices;
+
 class BasketHandlerTest extends PHPUnit_Framework_TestCase
 {
 
@@ -9,11 +12,6 @@ class BasketHandlerTest extends PHPUnit_Framework_TestCase
      * @var Enlight_Components_Db_Adapter_Pdo_Mysql
      */
     private $db;
-
-    /**
-     * @var \MojDashButton\Services\DashButton\DbRegisterService
-     */
-    private $register;
 
     /**
      * @var \Shopware\Components\DependencyInjection\Container
@@ -27,17 +25,18 @@ class BasketHandlerTest extends PHPUnit_Framework_TestCase
         $this->container = Shopware()->Container();
 
         $this->db = $this->container->get('db');
-        $this->register = $this->container->get('moj_dash_button.services.dash_button.db_register_service');
     }
 
     public function testAddProductToDashBasket()
     {
-        $button = $this->register->registerButton($this->getButtonCode());
+        $products = [
+            ['ordernumber' => 'SW10009.11', 'quantity' => 10]
+        ];
 
-        $button->setOrdernumber('SWAG-2000');
+        $button = $this->createButton($this->getButtonCode(), $products);
         $button->setUserId(-100);
 
-        $this->assertTrue($this->getBasketHandler()->addProductForButton($button));
+        $this->assertTrue($this->getBasketHandler()->addProductForButton($button, $button->getProducts()[0]));
 
         return $button;
     }
@@ -45,9 +44,10 @@ class BasketHandlerTest extends PHPUnit_Framework_TestCase
     /**
      * @depends testAddProductToDashBasket
      *
-     * @param $button
+     * @param DashButton  $button
+     * @return DashButton
      */
-    public function testCollectProductsForButton($button)
+    public function testCollectProductsForButton(DashButton $button)
     {
         $products = $this->getBasketHandler()->getProductsForButton($button);
 
@@ -61,32 +61,37 @@ class BasketHandlerTest extends PHPUnit_Framework_TestCase
      *
      * @param $button
      */
-    public function testCollectProductsForUser($button)
+    public function testCollectProductsForUser(DashButton $button)
     {
-        $button2 = $this->register->registerButton($this->getButtonCode());
+        $products = [
+            ['ordernumber' => 'SW10009.10', 'quantity' => 10],
+            ['ordernumber' => 'SW10010', 'quantity' => 5],
+        ];
 
-        $button2->setOrdernumber('SWAG-2002');
+        $button2 = $this->createButton($this->getButtonCode(), $products, DashButton::MULTIPRODUCTMODE);
         $button2->setUserId(-100);
 
         $basketHandler = $this->getBasketHandler();
 
-        $this->assertTrue($basketHandler->addProductForButton($button2));
+        $this->assertTrue($basketHandler->addProductForButton($button2, $button2->getProducts()[0]));
+        $this->assertTrue($basketHandler->addProductForButton($button2, $button2->getProducts()[1]));
 
-        $this->assertTrue($basketHandler->addProductForButton($button));
+        $this->assertTrue($basketHandler->addProductForButton($button, $button->getProducts()[0]));
 
         $products = $basketHandler->getProductsForUser($button2->getUserId());
         $ordernumbers = array_column($products, 'ordernumber');
 
-        $this->assertCount(3, $products);
-        $this->assertContains('SWAG-2002', $ordernumbers);
-        $this->assertContains('SWAG-2000', $ordernumbers);
+        $this->assertCount(4, $products);
+        $this->assertContains('SW10009.10', $ordernumbers);
+        $this->assertContains('SW10010', $ordernumbers);
+        $this->assertContains('SW10009.11', $ordernumbers);
 
         $this->removeButtons([$button, $button2]);
     }
 
     private function getBasketHandler()
     {
-        return new \MojDashButton\Services\DashButton\BasketHandler($this->db, $this->container->get('events'));
+        return new DBServices\BasketHandler($this->db, $this->container->get('events'));
     }
 
 }

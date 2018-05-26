@@ -16,7 +16,8 @@ class DbCollectorTest extends PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->em = Shopware()->Models();
+        $this->container = Shopware()->Container();
+        $this->em = $this->container->get('models');
     }
 
     public function testButtonNotFoundForButtonCode()
@@ -31,6 +32,10 @@ class DbCollectorTest extends PHPUnit_Framework_TestCase
         $buttonCode = $this->getButtonCode();
         $dashButton = $this->createButton($buttonCode);
 
+        $dashButton->setUserId(-100);
+        $this->em->persist($dashButton);
+        $this->em->flush($dashButton);
+
         $this->assertEquals($dashButton, $this->getDbCollector()->collectButton($buttonCode));
 
         return $dashButton;
@@ -44,28 +49,7 @@ class DbCollectorTest extends PHPUnit_Framework_TestCase
     {
         $this->assertContains($button, $this->getDbCollector()->collectButtonForUser(-100));
 
-        $this->deleteButton($button);
-    }
-
-    private function createButton($buttonCode)
-    {
-        $dashButton = new \MojDashButton\Models\DashButton();
-        $dashButton->setButtonCode($buttonCode);
-        $dashButton->setQuantity(1);
-        $dashButton->setOrdernumber('SWAG-UNIT');
-        $dashButton->setUserId(-100);
-
-        $this->em->persist($dashButton);
-        $this->em->flush($dashButton);
-
-        return $dashButton;
-
-    }
-
-    private function deleteButton($button)
-    {
-        $this->em->remove($button);
-        $this->em->flush($button);
+        $this->removeButtons([$button]);
     }
 
     private function getDbCollector()
