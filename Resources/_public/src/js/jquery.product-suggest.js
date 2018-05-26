@@ -13,8 +13,8 @@
 
             me.applyDataAttributes();
 
-            me._$searchBox = $(me.$el[0]);
-            me._$suggestBox = $(me.opts.suggestSelector);
+            me._$searchBox = $('input', me.$el);
+            me._$suggestBox = $(me.opts.suggestSelector, me.$el);
 
             me.registerEvents();
         },
@@ -31,29 +31,27 @@
             me._on($('div', me._$suggestBox), 'click', $.proxy(me.onClick, me));
         },
 
-        onClick: function(event){
+        onClick: function (event) {
             var me = this, $target = $(event.target), number = $target.attr('data-number');
 
             me._$searchBox.val(number);
+            me.hideSuggest();
         },
 
         onChange: function (event) {
             var me = this,
                 searchValue = me._$searchBox.val();
 
-            console.log(searchValue);
-
-            if(searchValue.length >= 3){
+            if (searchValue.length >= 3) {
                 $.ajax({
                     url: me.opts.searchUrl + '?search=' + searchValue,
                     success: function (response) {
-                        me._$suggestBox.empty();
-                        me._$suggestBox.addClass(me.opts.hiddenClass);
+                        me.hideSuggest();
 
-                        if(response.ordernumbers.length > 0){
+                        if (response.ordernumbers.length > 0) {
 
                             response.ordernumbers.forEach(function (number) {
-                                me._$suggestBox.append($('<div data-number="'+number+'">'+number+'</div>'))
+                                me._$suggestBox.append($('<div data-number="' + number + '">' + number + '</div>'))
                             });
 
                             me.registerSuggestEvent();
@@ -62,6 +60,13 @@
                     }
                 })
             }
+        },
+
+        hideSuggest: function () {
+            var me = this;
+
+            me._$suggestBox.empty();
+            me._$suggestBox.addClass(me.opts.hiddenClass);
         },
 
         /**

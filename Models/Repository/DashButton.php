@@ -32,6 +32,8 @@ class DashButton extends ModelRepository
      */
     public function saveProductPositions(\MojDashButton\Models\DashButton $button, array $productPositions)
     {
+        $changedIds = [];
+
         foreach ($productPositions as $productPosition) {
             if (!empty($productPosition['id'])) {
                 $dashProduct = $this->_em->getRepository(DashButtonProduct::class)->find($productPosition['id']);
@@ -46,13 +48,21 @@ class DashButton extends ModelRepository
             $this->_em->persist($dashProduct);
             $this->_em->flush($dashProduct);
 
-            if($this->logger){
+            $changedIds[] = $dashProduct->getId();
+
+            if ($this->logger) {
                 $this->logger->log('buttonSave', $button,
                     sprintf('Button successfully saved (%s, %d)', $dashProduct->getOrdernumber(), $dashProduct->getQuantity())
                 );
             }
         }
 
+        foreach ($button->getProducts() as $product) {
+            if (!\in_array($product->getId(), $changedIds)) {
+                $this->_em->remove($product);
+                $this->_em->flush($product);
+            }
+        }
 
         $this->_em->persist($button);
         $this->_em->flush($button);

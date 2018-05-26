@@ -60,8 +60,11 @@ class MojDashButton extends Plugin
 
     public function collectJS()
     {
+        $basePath = $this->getPath() . '/Resources/_public/src/js/';
+
         return new ArrayCollection([
-            $this->getPath() . '/Resources/_public/src/js/jquery.product-suggest.js'
+            $basePath . 'jquery.product-suggest.js',
+            $basePath . 'jquery.add-productpostion.js',
         ]);
     }
 

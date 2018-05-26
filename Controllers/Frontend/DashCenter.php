@@ -83,9 +83,15 @@ class Shopware_Controllers_Frontend_DashCenter extends Shopware_Controllers_Fron
         }
 
         if ($button) {
+            $productmode =
+                $this->Request()->get('productmode') === null
+                    ? \MojDashButton\Models\DashButton::SINGLEPRODUCTMODE
+                    : \MojDashButton\Models\DashButton::MULTIPRODUCTMODE;
+
+            $button->setProductMode((int)$productmode);
             $button->setUserId($this->getUserId());
 
-            $this->saveProductPositions($button, $this->Request()->get('prodcuts'));
+            $this->saveProductPositions($button, $this->Request()->get('products'));
 
             $this->redirect([
                 'controller' => 'DashCenter',
@@ -145,6 +151,10 @@ class Shopware_Controllers_Frontend_DashCenter extends Shopware_Controllers_Fron
     private function saveProductPositions(\MojDashButton\Models\DashButton $button, array $productPositions)
     {
         $em = $this->get('models');
+
+        if ($button->getProductMode() === \MojDashButton\Models\DashButton::SINGLEPRODUCTMODE){
+            $productPositions = [$productPositions[0]];
+        }
 
         /** @var \MojDashButton\Models\Repository\DashButton $repository */
         $repository = $em->getRepository(\MojDashButton\Models\DashButton::class);

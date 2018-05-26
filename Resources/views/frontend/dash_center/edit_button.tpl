@@ -6,7 +6,7 @@
 {block name="frontend_account_index_info"}
     <div class="edit--button">
         <div class="panel content block has--border is--rounded">
-            <form action="{url action=saveButton}" method="post" class="panel register--form">
+            <form action="{url action=saveButton}" method="post" class="panel register--form" data-add-product-position="true" data-productMode="{$button->getProductMode()}">
                 <div class="panel">
                     <h2 class="panel--title is--underline block-group">
                         {s name="DashButtonEditTitle"}Dash-Button verwalten{/s}
@@ -33,19 +33,65 @@
                                        value="{$button->getButtonCode()}">
                             </div>
                             <div class="block-group panel--body">
-                                <label for="quantity">{s name="DashButtonEditQuantityLabel"}Menge{/s}</label>
-                                <input name="quantity" type="number" id="quantity"
-                                       placeholder="{s name="DashButtonEditQuantityLabel"}Menge{/s}"
-                                       value="{$button->getQuantity()}">
+                                <label for="productmode">{s name="DashButtonEditProductModeLabel"}Multiprodukt-Modus aktiv?{/s}</label>
+                                <input name="productmode" type="checkbox" id="productmode"
+                                       class="checkbox" value="2"
+                                       {if $button->getProductMode() === 2}checked="checked" aria-checked="true" {/if}>
                             </div>
-                            <div class="block-group panel--body ordernumber--container">
-                                <label for="ordernumber">{s name="DashButtonEditOrdernumberLabel"}Bestellnummer{/s}</label>
-                                <input name="ordernumber" type="text" id="ordernumber" data-product-suggest="true"
-                                       data-searchUrl="{url module=widgets controller=DashProductSearch action=searchProduct}"
-                                       placeholder="{s name="DashButtonEditOrdernumberLabel"}Bestellnummer{/s}"
-                                       value="{$button->getOrdernumber()}">
-                                <div class="suggest--container is--hidden"></div>
+
+                            <div class="dash--products">
+                                {$dashproducts = $button->getProducts()}
+                                {foreach $dashproducts as $dashproduct}
+                                    {$index = {$dashproduct@index} + 1}
+                                    <div class="panel has--border dash--product-box">
+                                        <h3 class="panel--title is--underline">{s name="DashButtonEditProductHeadline"}Dash Produkt Nr. #{/s}{$index}</h3>
+                                        <div class="panel--body">
+                                            <input type="hidden" name="products[{$dashproduct@index}][id]"
+                                                   value="{$dashproduct->getId()}">
+                                            <div class="block-group panel--body">
+                                                <label for="quantity{$index}">{s name="DashButtonEditQuantityLabel"}Menge{/s}</label>
+                                                <input name="products[{$dashproduct@index}][quantity]" type="number"
+                                                       id="quantity{$index}"
+                                                       placeholder="{s name="DashButtonEditQuantityLabel"}Menge{/s}"
+                                                       value="{$dashproduct->getQuantity()}">
+                                            </div>
+                                            <div class="block-group panel--body ordernumber--container" data-product-suggest="true"
+                                                 data-searchUrl="{url module=widgets controller=DashProductSearch action=searchProduct}">
+                                                <label for="ordernumber{$index}">{s name="DashButtonEditOrdernumberLabel"}Bestellnummer{/s}</label>
+                                                <input name="products[{$dashproduct@index}][ordernumber]" type="text"
+                                                       id="ordernumber{$index}"
+                                                       placeholder="{s name="DashButtonEditOrdernumberLabel"}Bestellnummer{/s}"
+                                                       value="{$dashproduct->getOrdernumber()}">
+                                                <div class="suggest--container is--hidden"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {/foreach}
                             </div>
+
+                            <script>
+                                window.addtemplate =
+                                    '<div class="panel has--border dash--product-box">' +
+                                        '<h3 class="panel--title is--underline">{s name="DashButtonEditProductHeadline"}Dash Produkt Nr. #{/s}###INDEX###</h3>' +
+                                        '<div class="panel--body">' +
+                                            '<div class="block-group panel--body">' +
+                                                '<label for="quantity###INDEX###">{s name="DashButtonEditQuantityLabel"}Menge{/s}</label>' +
+                                                '<input name="products[###POSITION###][quantity]" type="number" id="quantity###INDEX###"' +
+                                                        'placeholder="{s name="DashButtonEditQuantityLabel"}Menge{/s}"' +
+                                                        'value="0">' +
+                                            '</div>' +
+                                            '<div class="block-group panel--body ordernumber--container" data-product-suggest="true"' +
+                                                'data-searchUrl="{url module=widgets controller=DashProductSearch action=searchProduct}">' +
+                                                '<label for="ordernumber###INDEX###">{s name="DashButtonEditOrdernumberLabel"}Bestellnummer{/s}</label>' +
+                                                '<input name="products[###POSITION###][ordernumber]" type="text" id="ordernumber###INDEX###"' +
+                                                    'placeholder="{s name="DashButtonEditOrdernumberLabel"}Bestellnummer{/s}"' +
+                                                    'value="">' +
+                                                '<div class="suggest--container is--hidden"></div>' +
+                                            '</div>' +
+                                        '</div>' +
+                                    '</div>';
+                            </script>
+
                             <p>&nbsp;</p>
                         </div>
                         <div class="submit block">
@@ -54,6 +100,12 @@
                                 {s name="DashButtonEditSave"}Speichern{/s}
                                 <i class="icon--arrow-right"></i>
                             </button>
+
+                            <span class="btn is--secondary is--large is--icon-left right add--trigger
+                                  {if $button->getProductMode() !== 2 || $products|count == 0}is--hidden{/if}">
+                                {s name="DashButtonProductAdd"}Produkt hinzufügen{/s}
+                                <i class="icon--plus3"></i>
+                            </span>
                         </div>
                     </div>
                 </div>
