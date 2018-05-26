@@ -94,9 +94,4 @@ class BasketHandler
         );
     }
 
-    public function createOrder($products, $userID)
-    {
-        return false;
-    }
-
 }
