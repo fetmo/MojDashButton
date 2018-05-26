@@ -25,6 +25,7 @@ class MojDashButton extends Plugin
     {
         return [
             'Enlight_Controller_Action_PreDispatch_Frontend' => 'addTemplate',
+            'Enlight_Controller_Action_PreDispatch_Widgets' => 'addTemplate',
             'Theme_Compiler_Collect_Plugin_Javascript' => 'collectJS',
             'Theme_Compiler_Collect_Plugin_Less' => 'collectLess',
         ];

@@ -37,11 +37,12 @@ class Shopware_Controllers_Frontend_DashCenter extends Shopware_Controllers_Fron
     {
         $buttonCode = $this->Request()->get('buttoncode');
 
-        if (!$buttonCode) {
+        if (null === $buttonCode) {
             $this->redirect([
                 'controller' => 'DashCenter',
                 'action' => 'buttonOverview'
             ]);
+            return;
         }
 
         $buttonCollector = $this->get('moj_dash_button.services.dash_button.db_collector');
@@ -52,6 +53,7 @@ class Shopware_Controllers_Frontend_DashCenter extends Shopware_Controllers_Fron
                 'controller' => 'DashCenter',
                 'action' => 'buttonOverview'
             ]);
+            return;
         }
 
         $logs = $this->get('moj_dash_button.services.core.logger')->collectLog($button);
@@ -71,6 +73,7 @@ class Shopware_Controllers_Frontend_DashCenter extends Shopware_Controllers_Fron
                 'controller' => 'DashCenter',
                 'action' => 'registerButton'
             ]);
+            return;
         }
 
         $buttonCollector = $this->get('moj_dash_button.services.dash_button.db_collector');
@@ -131,6 +134,7 @@ class Shopware_Controllers_Frontend_DashCenter extends Shopware_Controllers_Fron
                 'controller' => 'DashCenter',
                 'action' => 'registerButton'
             ]);
+            return;
         }
 
         $buttonCode = $this->Request()->get('buttoncode');

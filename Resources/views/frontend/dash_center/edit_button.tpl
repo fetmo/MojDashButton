@@ -44,7 +44,17 @@
                                 {foreach $dashproducts as $dashproduct}
                                     {$index = {$dashproduct@index} + 1}
                                     <div class="panel has--border dash--product-box">
-                                        <h3 class="panel--title is--underline">{s name="DashButtonEditProductHeadline"}Dash Produkt Nr. #{/s}{$index}</h3>
+                                        <h3 class="panel--title is--underline block-group">
+                                            {s name="DashButtonEditProductHeadline"}Dash Produkt Nr. #{/s}{$index}
+                                            <a href="{url module=widgets controller=DashButtonProduct action=getProductRules productPosition=$dashproduct->getId()}"
+                                               data-height="600px"
+                                               data-modalbox="true" data-mode="ajax"
+                                               data-title="{s name="DashButtonProductCongifureRules"}Dash Produkt konfigurieren{/s}"
+                                               class="btn is--small configure--link">
+                                                {s name="DashButtonProductCongifureRules"}Dash Produkt konfigurieren{/s}
+                                                <i class="icon--pencil"></i>
+                                            </a>
+                                        </h3>
                                         <div class="panel--body">
                                             <input type="hidden" name="products[{$dashproduct@index}][id]"
                                                    value="{$dashproduct->getId()}">
