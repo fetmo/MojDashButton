@@ -39,10 +39,7 @@ class Shopware_Controllers_Frontend_DashCenter extends Shopware_Controllers_Fron
             ]);
         }
 
-        $logs = $this->get('db')->fetchAll(
-            'SELECT * FROM moj_dash_log WHERE button_id = :buttonid ORDER BY log_Date DESC, id DESC ',
-            ['buttonid' => $button->getId()]
-        );
+        $logs = $this->get('moj_dash_button.services.core.logger')->collectLog($button);
 
         $basketHandler = $this->get('moj_dash_button.services.dash_button.basket_handler');
         $products = $basketHandler->getProductsForButton($button);
@@ -86,18 +83,9 @@ class Shopware_Controllers_Frontend_DashCenter extends Shopware_Controllers_Fron
         }
 
         if ($button) {
-            $button->setOrdernumber($this->Request()->get('ordernumber'));
-            $button->setQuantity($this->Request()->get('quantity'));
             $button->setUserId($this->getUserId());
 
-            $em = $this->get('models');
-
-            $em->persist($button);
-            $em->flush($button);
-
-            $this->get('moj_dash_button.services.core.logger')->log('buttonSave', $button,
-                sprintf('Button successfully saved (%s, %d)', $button->getOrdernumber(), $button->getQuantity())
-            );
+            $this->saveProductPositions($button, $this->Request()->get('prodcuts'));
 
             $this->redirect([
                 'controller' => 'DashCenter',
@@ -143,15 +131,26 @@ class Shopware_Controllers_Frontend_DashCenter extends Shopware_Controllers_Fron
             ]);
         }
 
-        $db = $this->get('db');
+        $em = $this->get('models');
 
-        $db->delete('moj_dash_button', 'id = ' . $button->getId());
-        $db->delete('moj_basket_details', 'button_id = ' . $button->getId());
+        $em->remove($button);
+        $em->flush($button);
 
         $this->redirect([
             'controller' => 'DashCenter',
             'action' => 'buttonOverview'
         ]);
+    }
+
+    private function saveProductPositions(\MojDashButton\Models\DashButton $button, array $productPositions)
+    {
+        $em = $this->get('models');
+
+        /** @var \MojDashButton\Models\Repository\DashButton $repository */
+        $repository = $em->getRepository(\MojDashButton\Models\DashButton::class);
+        $repository
+            ->setLogger($this->get('moj_dash_button.services.core.logger'))
+            ->saveProductPositions($button, $productPositions);
     }
 
     private function exitOnError($action)

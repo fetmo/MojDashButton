@@ -11,7 +11,7 @@ use Shopware\Models\Customer\Customer;
  * Class DashButton
  * @package MojDashButton\Models
  *
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="\MojDashButton\Models\Repository\DashButton")
  * @ORM\Table(name="moj_dash_button")
  */
 class DashButton extends ModelEntity

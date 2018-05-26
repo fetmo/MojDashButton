@@ -27,4 +27,20 @@ class Logger
         );
     }
 
+    public function collectLog(DashButton $button)
+    {
+        $selectSQL = 'SELECT * FROM moj_dash_log 
+                        WHERE button_id = :buttonid OR message like :buttoncode 
+                        ORDER BY log_Date DESC, id DESC';
+
+        $selectSQL = str_replace(':buttoncode', '"%' . $button->getButtonCode() . '%"', $selectSQL);
+
+        return
+            $this->db->fetchAll($selectSQL,
+                [
+                    'buttonid' => $button->getId()
+                ]
+            );
+    }
+
 }
