@@ -36,6 +36,22 @@ class MojDashButton extends Plugin
 
         $this->createModels();
 
+        $attributeService = $this->container->get('shopware_attribute.crud_service');
+
+        $attributeService->update(
+            's_user_attributes',
+            'moj_dash_button_directorder',
+            'boolean',
+            [
+                'label' => 'Direktbestllung über Dash-Button aktiv?',
+                'displayInBackend' => true,
+                'custom' => true,
+            ],
+            null,
+            null,
+            false
+        );
+
         return true;
     }
 

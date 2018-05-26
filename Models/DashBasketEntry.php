@@ -84,6 +84,14 @@ class DashBasketEntry extends ModelEntity
     private $ordernumber;
 
     /**
+     * @var \MojDashButton\Models\DashButtonProduct
+     *
+     * @ORM\ManyToOne(targetEntity="MojDashButton\Models\DashButtonProduct")
+     * @ORM\JoinColumn(name="dashproduct_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    private $dashProduct;
+
+    /**
      * DashBasketEntry constructor.
      */
     public function __construct()
@@ -225,6 +233,22 @@ class DashBasketEntry extends ModelEntity
     public function setOrdernumber($ordernumber)
     {
         $this->ordernumber = $ordernumber;
+    }
+
+    /**
+     * @return DashButtonProduct
+     */
+    public function getDashProductId(): DashButtonProduct
+    {
+        return $this->dashProduct;
+    }
+
+    /**
+     * @param DashButtonProduct $dashProduct
+     */
+    public function setDashProductId(DashButtonProduct $dashProduct)
+    {
+        $this->dashProduct = $dashProduct;
     }
 
 }

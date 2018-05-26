@@ -43,7 +43,8 @@ class BasketHandler
             'quantity' => $buttonProduct->getQuantity(),
             'basket_date' => date("Y-m-d H:i:s"),
             'user_id' => $button->getUserId(),
-            'ordernumber' => $buttonProduct->getOrdernumber()
+            'ordernumber' => $buttonProduct->getOrdernumber(),
+            'dashproduct_id' => $buttonProduct->getId()
         ];
 
         $insertArguments = $this->eventManager->filter('DashButton_AddToBasket_FilterArguments', $insertArguments, [

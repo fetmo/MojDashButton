@@ -59,6 +59,7 @@ class DashButton extends ModelRepository
 
         foreach ($button->getProducts() as $product) {
             if (!\in_array($product->getId(), $changedIds)) {
+                $button->removeProduct($product);
                 $this->_em->remove($product);
                 $this->_em->flush($product);
             }

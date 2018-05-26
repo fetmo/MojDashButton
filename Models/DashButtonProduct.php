@@ -158,4 +158,9 @@ class DashButtonProduct extends ModelEntity
         $this->rules = $rules;
     }
 
+    public function __toString()
+    {
+        return json_encode(get_object_vars($this));
+    }
+
 }

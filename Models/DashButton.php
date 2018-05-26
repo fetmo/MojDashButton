@@ -138,6 +138,11 @@ class DashButton extends ModelEntity
         $this->products->add($product);
     }
 
+    public function removeProduct(DashButtonProduct $product)
+    {
+        $this->products->removeElement($product);
+    }
+
     /**
      * @return Customer
      */

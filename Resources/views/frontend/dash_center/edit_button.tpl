@@ -102,7 +102,7 @@
                             </button>
 
                             <span class="btn is--secondary is--large is--icon-left right add--trigger
-                                  {if $button->getProductMode() !== 2 || $products|count == 0}is--hidden{/if}">
+                                  {if $button->getProductMode() !== 2 && $dashproducts|count > 0}is--hidden{/if}">
                                 {s name="DashButtonProductAdd"}Produkt hinzufügen{/s}
                                 <i class="icon--plus3"></i>
                             </span>

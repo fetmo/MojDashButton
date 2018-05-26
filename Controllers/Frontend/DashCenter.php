@@ -3,6 +3,21 @@
 class Shopware_Controllers_Frontend_DashCenter extends Shopware_Controllers_Frontend_Account
 {
 
+    public function toggleDirectOrderAction()
+    {
+        $db = $this->get('db');
+
+        $success = $db->executeUpdate(
+            'UPDATE s_user_attributes SET moj_dash_button_directorder = !moj_dash_button_directorder WHERE id = :id',
+            ['id' => $this->getUserId()]
+        );
+
+
+        $this->redirect([
+            'controller'=> 'DashCenter',
+            'success' => $success
+        ]);
+    }
 
     public function buttonOverviewAction()
     {
@@ -91,7 +106,7 @@ class Shopware_Controllers_Frontend_DashCenter extends Shopware_Controllers_Fron
             $button->setProductMode((int)$productmode);
             $button->setUserId($this->getUserId());
 
-            $this->saveProductPositions($button, $this->Request()->get('products'));
+            $this->saveProductPositions($button, (array)$this->Request()->get('products'));
 
             $this->redirect([
                 'controller' => 'DashCenter',
