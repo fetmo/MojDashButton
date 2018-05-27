@@ -48,7 +48,7 @@ class TriggerClick implements SubscriberInterface
         $dashProductId = $basketEntry['dashproduct_id'];
 
         $autoTrigger = $this->db->fetchOne(
-            'SELECT moj_dash_button_directorder FROM s_user_attributes',
+            'SELECT moj_dash_button_directorder FROM s_user_attributes WHERE id = :user',
             ['user' => $userId]
         );
 

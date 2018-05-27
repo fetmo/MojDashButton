@@ -53,7 +53,7 @@ class TriggerClickTest extends \PHPUnit_Framework_TestCase
                 [
                     'ruledata' => json_encode([
                         'type' => \MojDashButton\Components\Rules\IntervalRule::TYPE,
-                        'config' => '2 hours'
+                        'config' => '2 minutes'
                     ])
                 ]
             ]
@@ -131,6 +131,8 @@ class TriggerClickTest extends \PHPUnit_Framework_TestCase
             $this->container->get('moj_dash_button.services.dash_button.order_handler'),
             $this->container->get('moj_dash_button.services.dash_button.basket_validation_service')
         );
+
+        $this->assertArrayHasKey('DashButton_AddToBasket_Finish', $subscriber::getSubscribedEvents());
 
         return $subscriber;
     }

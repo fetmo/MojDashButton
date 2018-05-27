@@ -50,9 +50,9 @@ trait ButtonCodeGenerator
         $button = new DashButton();
         $button->fromArray([
             'buttoncode' => $buttoncode,
-            'userId' => 1,
+            'userId' => $this->getUserId(),
             'productMode' => $productmode,
-            'user'=> $em->getRepository(\Shopware\Models\Customer\Customer::class)->find(1)
+            'user'=> $em->getRepository(\Shopware\Models\Customer\Customer::class)->find($this->getUserId())
         ]);
 
         $em->persist($button);
@@ -82,5 +82,10 @@ trait ButtonCodeGenerator
         }
 
         return $button;
+    }
+
+    private function getUserId()
+    {
+        return 1;
     }
 }

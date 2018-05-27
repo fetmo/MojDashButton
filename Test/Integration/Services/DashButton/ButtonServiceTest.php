@@ -3,7 +3,7 @@
 class ButtonServiceTest extends PHPUnit_Framework_TestCase
 {
 
-    use \MojDashButton\Test\Integration\Services\Helper\ButtonCodeGenerator;
+    use \MojDashButton\Test\Integration\Services\Helper\UserHelper;
 
     /**
      * @var Enlight_Components_Db_Adapter_Pdo_Mysql
@@ -44,6 +44,7 @@ class ButtonServiceTest extends PHPUnit_Framework_TestCase
             ['ordernumber' => 'SW10009.10', 'quantity' => 10]
         ];
 
+        $this->unableAutoOrder();
         $button = $this->createButton($this->getButtonCode(), $products);
 
         $token = $this->getAuthService()->generateToken($button->getButtonCode());
@@ -141,6 +142,8 @@ class ButtonServiceTest extends PHPUnit_Framework_TestCase
         $button = $this->createButton($this->getButtonCode());
         $this->buttons = $oldButtons;
         $this->buttons[] = $button;
+
+        $this->revertAutoOrder();
 
         $token = $this->getAuthService()->generateToken($button->getButtonCode());
 

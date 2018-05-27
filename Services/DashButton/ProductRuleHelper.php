@@ -45,6 +45,10 @@ class ProductRuleHelper
 
                     $ruleConfig['config'] = $config;
                     $configuredRule->setRuledata(json_encode($ruleConfig));
+
+                    $this->em->persist($configuredRule);
+                    $this->em->flush($configuredRule);
+
                     $mergedSet[] = $configuredRule;
                     break;
                 }
@@ -60,6 +64,7 @@ class ProductRuleHelper
                 ]);
 
                 $this->em->persist($newRule);
+                $this->em->flush($newRule);
 
                 $mergedSet[] = $newRule;
             }
@@ -68,7 +73,7 @@ class ProductRuleHelper
         $productPosition->setRules($mergedSet);
 
         $this->em->persist($productPosition);
-        $this->em->flush();
+        $this->em->flush($productPosition);
     }
 
     public function getProductRules(DashButtonProduct $productPosition)
