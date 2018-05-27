@@ -98,7 +98,7 @@ class BasketValidationService
             ];
         }
 
-        if ($product['quantity'] > (int)$product['instock']) {
+        if ($product['quantity'] > (int)$product['instock'] && $product['laststock'] === 1) {
             $errors[] = [
                 'message' => 'Verfügbare Menge überschritten.'
             ];

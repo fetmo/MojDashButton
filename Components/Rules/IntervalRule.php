@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\Container;
 class IntervalRule implements RuleInterface
 {
 
-    CONST TYPE = 'orderinteval';
+    CONST TYPE = 'orderinterval';
 
     /**
      * @var Container
