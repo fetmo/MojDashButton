@@ -26,6 +26,7 @@ class BasketValidationService
     public function validateSelectedProducts($selected)
     {
         $basket = [];
+
         //group products
         foreach ($selected as $item) {
             unset($item['checked']);
@@ -37,7 +38,6 @@ class BasketValidationService
                 $basket[$item['ordernumber']] = $item;
             }
         }
-
 
         //load products
         $products = $this->productService->getList(array_keys($basket), $this->contextService->getProductContext());
@@ -52,6 +52,7 @@ class BasketValidationService
             $basketPosition['validation'] = $this->validateProduct($basketPosition);
             $basket[$ordernumber] = $this->calculateBasketPosition($basketPosition);;
         }
+
         return $basket;
     }
 
@@ -63,6 +64,10 @@ class BasketValidationService
             $purchaseQuantity = $product['maxpurchase'];
         } else if ($purchaseQuantity < $product['minpurchase']) {
             $purchaseQuantity = $product['minpurchase'];
+        }
+
+        if($purchaseQuantity > $product['instock'] && $product['laststock'] === 1){
+            $purchaseQuantity = $product['instock'];
         }
 
         $product['total_numeric'] = $purchaseQuantity * $product['price_numeric'];

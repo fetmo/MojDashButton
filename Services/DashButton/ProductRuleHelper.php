@@ -4,9 +4,11 @@ namespace MojDashButton\Services\DashButton;
 
 
 use MojDashButton\Components\Rules\IntervalRule;
+use MojDashButton\Components\Rules\RuleInterface;
 use MojDashButton\Models\DashButtonProduct;
 use MojDashButton\Models\DashButtonRule;
 use Shopware\Components\Model\ModelManager;
+use Symfony\Component\DependencyInjection\Container;
 
 class ProductRuleHelper
 {
@@ -16,9 +18,16 @@ class ProductRuleHelper
      */
     private $em;
 
-    public function __construct(ModelManager $em)
+    /**
+     * @var Container
+     */
+    private $container;
+
+    public function __construct(ModelManager $em, Container $container)
     {
         $this->em = $em;
+
+        $this->container = $container;
     }
 
     public function createProductRule(DashButtonProduct $productPosition, $ruleData)
@@ -31,7 +40,7 @@ class ProductRuleHelper
 
             foreach ($configuredRules as $configuredRule) {
                 $ruleConfig = json_decode($configuredRule->getRuledata(), true);
-                if ($ruleConfig['type'] === $type){
+                if ($ruleConfig['type'] === $type) {
                     $processed = true;
 
                     $ruleConfig['config'] = $config;
@@ -41,7 +50,7 @@ class ProductRuleHelper
                 }
             }
 
-            if(!$processed){
+            if (!$processed) {
                 $newRule = (new DashButtonRule())->fromArray([
                     'ruledata' => json_encode([
                         'type' => $type,
@@ -72,7 +81,17 @@ class ProductRuleHelper
             $ruleSet = json_decode($ruleData, true);
 
             $class = $this->getConfiguredRules()[$ruleSet['type']];
-            $ruleSet['class'] = new $class($ruleSet['config']);
+
+            $config = [
+                'config' => $ruleSet['config'],
+                'dashproduct' => $productPosition
+            ];
+
+            /** @var RuleInterface $classInstance */
+            $classInstance =  $this->container->get($class);
+            $classInstance->configure($config);
+
+            $ruleSet['class'] = $classInstance;
 
             $ruleSets[$ruleSet['type']] = $ruleSet;
         }
@@ -83,7 +102,7 @@ class ProductRuleHelper
     public function getConfiguredRules()
     {
         return [
-            'orderinteval' => IntervalRule::class
+            IntervalRule::TYPE => IntervalRule::class
         ];
     }
 

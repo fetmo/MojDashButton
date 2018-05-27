@@ -4,6 +4,7 @@ namespace MojDashButton\Test\Integration\Services\Helper;
 
 use MojDashButton\Models\DashButton;
 use MojDashButton\Models\DashButtonProduct;
+use MojDashButton\Models\DashButtonRule;
 use Shopware\Components\DependencyInjection\Container;
 
 trait ButtonCodeGenerator
@@ -58,13 +59,26 @@ trait ButtonCodeGenerator
         $em->flush($button);
 
         foreach ($products as $product) {
+            $rules = $product['rules'];
+            unset($product['rules']);
+
             $dashProduct = new DashButtonProduct();
-            $dashProduct->setOrdernumber($product['ordernumber']);
-            $dashProduct->setQuantity($product['quantity']);
-            $dashProduct->setButton($button);
+            $dashProduct->fromArray(array_merge($product, [
+                'button' => $button
+            ]));
 
             $em->persist($dashProduct);
             $em->flush($dashProduct);
+
+            foreach ($rules as $rule) {
+                $dashRule = new DashButtonRule();
+                $dashRule->fromArray(array_merge($rule, [
+                    'product' => $dashProduct
+                ]));
+
+                $em->persist($dashRule);
+                $em->flush($dashRule);
+            }
         }
 
         return $button;

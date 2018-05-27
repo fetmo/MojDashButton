@@ -61,7 +61,7 @@ class BasketHandler
         }
 
         $insertArguments['basketId'] = $this->db->lastInsertId('moj_basket_details');
-        $this->eventManager->notify('DashButton_AddToBasket_Finish', $insertArguments);
+        $this->eventManager->notify('DashButton_AddToBasket_Finish', ['basket_entry' => $insertArguments]);
 
         return $insertSuccess;
     }

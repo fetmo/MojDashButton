@@ -78,6 +78,7 @@ class DashButtonRule extends ModelEntity
     public function setProduct(DashButtonProduct $product)
     {
         $this->product = $product;
+        $this->product->addRule($this);
     }
 
 }
