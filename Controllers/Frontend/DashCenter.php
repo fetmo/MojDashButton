@@ -171,7 +171,7 @@ class Shopware_Controllers_Frontend_DashCenter extends Shopware_Controllers_Fron
     {
         $em = $this->get('models');
 
-        if ($button->getProductMode() === \MojDashButton\Models\DashButton::SINGLEPRODUCTMODE){
+        if ($button->getProductMode() === \MojDashButton\Models\DashButton::SINGLEPRODUCTMODE && count($productPositions) > 0){
             $productPositions = [$productPositions[0]];
         }
 
