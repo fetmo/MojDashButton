@@ -25,6 +25,12 @@ class Shopware_Controllers_Frontend_DashButton extends Shopware_Controllers_Api_
         $this->authenticationService = $this->get('moj_dash_button.services.api.authentication_service');
         $token = $this->Request()->get('token');
 
+        if($token === null){
+            $this->Request()->setPost(json_decode(file_get_contents('php://input'), true));
+            $token = $this->Request()->get('token');
+        }
+
+
         if (null === $token || false === $this->authenticationService->validateToken($token)) {
             throw new \Exception('Token Validation mismatch');
         }
