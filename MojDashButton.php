@@ -47,11 +47,14 @@ class MojDashButton extends Plugin
                 'label' => 'Direktbestllung über Dash-Button aktiv?',
                 'displayInBackend' => true,
                 'custom' => true,
-            ],
-            null,
-            null,
-            false
+            ]
         );
+
+        $models = $this->container->get('models');
+
+        $metaDataCache = $models->getConfiguration()->getMetadataCacheImpl();
+        $metaDataCache->deleteAll();
+        $models->generateAttributeModels( [ 's_articles_attributes' ] );
 
         return true;
     }
