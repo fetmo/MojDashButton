@@ -12,5 +12,8 @@
   "require": {
     "symfony/var-dumper": "3.4.x-dev",
     "shopware/shopware": "5.4.x-dev"
+  },
+  "scripts": {
+    "test": "phpunit --colors=always"
   }
 }
