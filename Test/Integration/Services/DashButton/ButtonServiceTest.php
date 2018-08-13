@@ -41,7 +41,7 @@ class ButtonServiceTest extends PHPUnit_Framework_TestCase
     public function testGetProductForButton()
     {
         $products = [
-            ['ordernumber' => 'SW10009.10', 'quantity' => 10]
+            ['ordernumber' => 'SW10118.10', 'quantity' => 10]
         ];
 
         $this->unableAutoOrder();
@@ -84,8 +84,8 @@ class ButtonServiceTest extends PHPUnit_Framework_TestCase
     public function testGetProductForMultiProductButton($firstButton)
     {
         $products = [
-            ['ordernumber' => 'SW10009.10', 'quantity' => 10],
-            ['ordernumber' => 'SW10010', 'quantity' => 5],
+            ['ordernumber' => 'SW10118.10', 'quantity' => 10],
+            ['ordernumber' => 'SW10119', 'quantity' => 5],
         ];
 
         $button = $this->createButton($this->getButtonCode(), $products, \MojDashButton\Models\DashButton::MULTIPRODUCTMODE);

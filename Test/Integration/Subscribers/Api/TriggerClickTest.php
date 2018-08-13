@@ -21,7 +21,7 @@ class TriggerClickTest extends \PHPUnit_Framework_TestCase
     public function testTriggerClickOnAutoOrderNotConfigured()
     {
         $product = [
-            'ordernumber' => 'SW10009.11',
+            'ordernumber' => 'SW10118.11',
             'quantity' => 7
         ];
         $button = $this->createButton($this->getButtonCode(), [$product]);
@@ -47,7 +47,7 @@ class TriggerClickTest extends \PHPUnit_Framework_TestCase
     public function testTriggerClickOnAutoOrder()
     {
         $product = [
-            'ordernumber' => 'SW10009.11',
+            'ordernumber' => 'SW10118.11',
             'quantity' => 7,
             'rules' => [
                 [

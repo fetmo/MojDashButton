@@ -30,7 +30,7 @@ class BasketHandlerTest extends PHPUnit_Framework_TestCase
     public function testAddProductToDashBasket()
     {
         $products = [
-            ['ordernumber' => 'SW10009.11', 'quantity' => 10]
+            ['ordernumber' => 'SW10118.11', 'quantity' => 10]
         ];
 
         $button = $this->createButton($this->getButtonCode(), $products);
@@ -64,8 +64,8 @@ class BasketHandlerTest extends PHPUnit_Framework_TestCase
     public function testCollectProductsForUser(DashButton $button)
     {
         $products = [
-            ['ordernumber' => 'SW10009.10', 'quantity' => 10],
-            ['ordernumber' => 'SW10010', 'quantity' => 5],
+            ['ordernumber' => 'SW10118.10', 'quantity' => 10],
+            ['ordernumber' => 'SW10119', 'quantity' => 5],
         ];
 
         $button2 = $this->createButton($this->getButtonCode(), $products, DashButton::MULTIPRODUCTMODE);
@@ -82,9 +82,9 @@ class BasketHandlerTest extends PHPUnit_Framework_TestCase
         $ordernumbers = array_column($products, 'ordernumber');
 
         $this->assertCount(4, $products);
-        $this->assertContains('SW10009.10', $ordernumbers);
-        $this->assertContains('SW10010', $ordernumbers);
-        $this->assertContains('SW10009.11', $ordernumbers);
+        $this->assertContains('SW10118.10', $ordernumbers);
+        $this->assertContains('SW10119', $ordernumbers);
+        $this->assertContains('SW10118.11', $ordernumbers);
 
         $this->removeButtons([$button, $button2]);
     }
